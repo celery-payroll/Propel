@@ -1,0 +1,43 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['8.1']
+
+      fail-fast: false
+
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      -   uses: actions/checkout@v2
+
+
+      -   run: mysql --host 127.0.0.1 -u root -proot -e 'SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE IF EXISTS test; DROP SCHEMA IF EXISTS second_hand_books; DROP SCHEMA IF EXISTS contest; DROP DATABASE IF EXISTS reverse_bookstore; DROP SCHEMA IF EXISTS bookstore_schemas; SET FOREIGN_KEY_CHECKS = 1;'
+      -   run: mysql --host 127.0.0.1 -u root -proot -e 'CREATE DATABASE test; CREATE SCHEMA bookstore_schemas; CREATE SCHEMA contest; CREATE SCHEMA second_hand_books; CREATE DATABASE reverse_bookstore;'
+
+      -   uses: shivammathur/setup-php@v2
+          with:
+            php-version: ${{ matrix.php-version }}
+            extensions: mbstring, iconv
+
+      -   uses: ramsey/composer-install@v2
+
+      -   run: sudo echo "127.0.0.1 db" | sudo tee -a /etc/hosts
+
+      -   run: ./test/reset_tests.sh
+
+      -   run: vendor/bin/phpunit
