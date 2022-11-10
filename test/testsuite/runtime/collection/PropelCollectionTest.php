@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTestBase.php';
+require_once __DIR__ . '/../../../tools/helpers/bookstore/BookstoreTestBase.php';
 
 /**
  * Test class for PropelCollection.
@@ -37,6 +37,40 @@ class PropelCollectionTest extends BookstoreTestBase
         $this->assertEquals($data, $col->getData(), 'getData() returns the collection data');
         $col[0] = 'bar4';
         $this->assertEquals('bar1', $data[0], 'getData() returns a copy of the collection data');
+    }
+
+    public function testCloneContainingScalar()
+    {
+        $data = array('bar1', 'bar2', 'bar3');
+        $col = new PropelCollection($data);
+
+        $clone = clone $col;
+
+        $orgCount = $col->getIterator()->count();
+        $cloneCount = $clone->getIterator()->count();
+
+        $this->assertEquals($orgCount, $cloneCount, 'all entries will be cloned');
+    }
+
+    public function testCloneContainingObjects()
+    {
+        $a = new Author();
+        $b= new Book();
+        $b->setAuthor($a);
+        $b->setISBN('ISBN1');
+
+        $b1 = new Book();
+        $b1->setPrice(5.55);
+
+        $col = new PropelCollection(array($b, $b1));
+        $clone = clone $col;
+
+        $orgCount = $col->getIterator()->count();
+        $cloneCount = $clone->getIterator()->count();
+        $this->assertEquals($orgCount, $cloneCount, 'cloned collections have the same size');
+
+        $this->assertEquals($b, $clone[0], 'cloned objects are equal');
+        $this->assertEquals($b1, $clone[1], 'cloned objects are equal');
     }
 
     public function testSetData()
@@ -189,6 +223,7 @@ class PropelCollectionTest extends BookstoreTestBase
      */
     public function testGetUnknownOffset()
     {
+        $this->expectException(PropelException::class);
         $col = new PropelCollection();
         $bar = $col->get('foo');
     }
@@ -249,6 +284,7 @@ class PropelCollectionTest extends BookstoreTestBase
      */
     public function testRemoveUnknownOffset()
     {
+        $this->expectException(PropelException::class);
         $col = new PropelCollection();
         $col->remove(2);
     }
@@ -327,6 +363,7 @@ class PropelCollectionTest extends BookstoreTestBase
      */
     public function testGetPeerClassNoModel()
     {
+        $this->expectException(PropelException::class);
         $col = new PropelCollection();
         $col->getPeerClass();
     }
@@ -346,6 +383,7 @@ class PropelCollectionTest extends BookstoreTestBase
      */
     public function testGetConnectionNoModel()
     {
+        $this->expectException(PropelException::class);
         $col = new PropelCollection();
         $col->getConnection();
     }

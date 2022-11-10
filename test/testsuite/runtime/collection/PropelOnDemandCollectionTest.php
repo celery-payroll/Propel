@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreEmptyTestBase.php';
+require_once __DIR__ . '/../../../tools/helpers/bookstore/BookstoreEmptyTestBase.php';
 
 /**
  * Test class for PropelOnDemandCollection.
@@ -19,7 +19,7 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreEmp
  */
 class PropelOnDemandCollectionTest extends BookstoreEmptyTestBase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         BookstoreDataPopulator::populate($this->con);
@@ -27,19 +27,19 @@ class PropelOnDemandCollectionTest extends BookstoreEmptyTestBase
         $this->books = PropelQuery::from('Book')->setFormatter(ModelCriteria::FORMAT_ON_DEMAND)->find();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         Propel::enableInstancePooling();
     }
 
-    public function testSetFormatter()
+    public function testSetFormatter(): void
     {
         $this->assertTrue($this->books instanceof PropelOnDemandCollection);
         $this->assertEquals(4, count($this->books));
     }
 
-    public function testKeys()
+    public function testKeys(): void
     {
         $i = 0;
         foreach ($this->books as $key => $book) {
@@ -48,49 +48,39 @@ class PropelOnDemandCollectionTest extends BookstoreEmptyTestBase
         }
     }
 
-    /**
-     * @expectedException PropelException
-     */
-    public function testoffsetExists()
+    public function testoffsetExists(): void
     {
+        $this->expectException(PropelException::class);
         $this->books->offsetExists(2);
     }
 
-    /**
-     * @expectedException PropelException
-     */
-    public function testoffsetGet()
+    public function testoffsetGet(): void
     {
+        $this->expectException(PropelException::class);
         $this->books->offsetGet(2);
     }
 
-    /**
-     * @expectedException PropelException
-     */
-    public function testoffsetSet()
+    public function testoffsetSet(): void
     {
+        $this->expectException(PropelException::class);
         $this->books->offsetSet(2, 'foo');
     }
 
-    /**
-     * @expectedException PropelException
-     */
-    public function testoffsetUnset()
+    public function testoffsetUnset(): void
     {
+        $this->expectException(PropelException::class);
         $this->books->offsetUnset(2);
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $this->assertNotEquals(array(), $this->books->toArray());
         // since the code from toArray comes frmo PropelObjectCollection, we'll assume it's good
     }
 
-    /**
-     * @expectedException PropelException
-     */
-    public function testFromArray()
+    public function testFromArray(): void
     {
+        $this->expectException(PropelException::class);
         $this->books->fromArray(array());
     }
 

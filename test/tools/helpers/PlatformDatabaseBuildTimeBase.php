@@ -1,6 +1,6 @@
 <?php
 
-class PlatformDatabaseBuildTimeBase extends PHPUnit_Framework_TestCase
+class PlatformDatabaseBuildTimeBase extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -23,7 +23,7 @@ class PlatformDatabaseBuildTimeBase extends PHPUnit_Framework_TestCase
      */
     public $con;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (Propel::isInit()) {
             $this->oldPropelConfiguration = Propel::getConfiguration();
@@ -51,7 +51,7 @@ class PlatformDatabaseBuildTimeBase extends PHPUnit_Framework_TestCase
         $this->parser->parse($this->database);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->oldPropelConfiguration) {
             Propel::setConfiguration($this->oldPropelConfiguration);
@@ -64,7 +64,7 @@ class PlatformDatabaseBuildTimeBase extends PHPUnit_Framework_TestCase
      * Detects the differences between current connected database and $pDatabase
      * and updates the schema. This does not DROP tables.
      *
-     * @param  Database $pDatabase
+     * @param Database $pDatabase
      */
     public function updateSchema($pDatabase)
     {

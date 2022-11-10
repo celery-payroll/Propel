@@ -16,7 +16,7 @@ require_once dirname(__FILE__) . '/../../../../tools/helpers/bookstore/Bookstore
  * This test uses generated Bookstore classes to test the behavior of various
  * peer operations.
  *
- * The database is relaoded before every test and flushed after every test.  This
+ * The database is reloaded before every test and flushed after every test.  This
  * means that you can always rely on the contents of the databases being the same
  * for each test method in this class.  See the BookstoreDataPopulator::populate()
  * method for the exact contents of the database.
@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../../../../tools/helpers/bookstore/Bookstore
  */
 class GeneratedPeerDoSelectTest extends BookstoreEmptyTestBase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         BookstoreDataPopulator::populate();
@@ -278,7 +278,7 @@ class GeneratedPeerDoSelectTest extends BookstoreEmptyTestBase
 
     /**
      * Test hydration of joined rows that contain lazy load columns.
-     * @link       http://propel.phpdb.org/trac/ticket/464
+     * @link       http://trac.propelorm.org/ticket/464
      */
     public function testHydrationJoinLazyLoad()
     {
@@ -310,7 +310,7 @@ class GeneratedPeerDoSelectTest extends BookstoreEmptyTestBase
 
     /**
      * Testing foreign keys with multiple referrer columns.
-     * @link       http://propel.phpdb.org/trac/ticket/606
+     * @link       http://trac.propelorm.org/ticket/606
      */
     public function testMultiColFk()
     {
@@ -349,7 +349,7 @@ class GeneratedPeerDoSelectTest extends BookstoreEmptyTestBase
 
     /**
      * Testing foreign keys with multiple referrer columns.
-     * @link       http://propel.phpdb.org/trac/ticket/606
+     * @link       http://trac.propelorm.org/ticket/606
      */
     public function testMultiColJoin()
     {

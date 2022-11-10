@@ -8,19 +8,19 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/behavior/archivable/ArchivableBehavior.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/behavior/concrete_inheritance/ConcreteInheritanceBehavior.php';
-require_once dirname(__FILE__) . '/../../../../../runtime/lib/Propel.php';
+require_once __DIR__ . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
+require_once __DIR__ . '/../../../../../generator/lib/behavior/archivable/ArchivableBehavior.php';
+require_once __DIR__ . '/../../../../../generator/lib/behavior/concrete_inheritance/ConcreteInheritanceBehavior.php';
+require_once __DIR__ . '/../../../../../runtime/lib/Propel.php';
 
 /**
  * Tests for the combination of ArchivableBehavior and ConcreteInheritanceBehavior classes
  */
-class ArchivableAndConcreteInheritanceBehaviorTest extends PHPUnit_Framework_TestCase
+class ArchivableAndConcreteInheritanceBehaviorTest extends \PHPUnit\Framework\TestCase
 {
     protected static $generatedSQL;
 
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('ArchivableConcretePagePeer')) {
             $schema = <<<EOF

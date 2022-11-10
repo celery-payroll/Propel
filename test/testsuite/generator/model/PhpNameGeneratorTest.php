@@ -11,13 +11,13 @@
 require_once dirname(__FILE__) . '/../../../../generator/lib/model/PhpNameGenerator.php';
 
 /**
- * Tests for PhpNamleGenerator
+ * Tests for PhpNameGenerator
  *
  * @author     <a href="mailto:mpoeschl@marmot.at>Martin Poeschl</a>
  * @version    $Revision$
  * @package    generator.model
  */
-class PhpNameGeneratorTest extends PHPUnit_Framework_TestCase
+class PhpNameGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     public static function phpnameMethodDataProvider()
     {

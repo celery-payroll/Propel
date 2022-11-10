@@ -9,18 +9,18 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../../../generator/lib/model/diff/PropelTableComparator.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/model/diff/PropelTableDiff.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/platform/MysqlPlatform.php';
+require_once __DIR__ . '/../../../../../generator/lib/model/diff/PropelTableComparator.php';
+require_once __DIR__ . '/../../../../../generator/lib/model/diff/PropelTableDiff.php';
+require_once __DIR__ . '/../../../../../generator/lib/platform/MysqlPlatform.php';
 
 /**
  * Tests for the Column methods of the PropelTableComparator service class.
  *
  * @package    generator.model.diff
  */
-class PropelTableColumnComparatorTest extends PHPUnit_Framework_TestCase
+class PropelTableColumnComparatorTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->platform = new MysqlPlatform();
     }

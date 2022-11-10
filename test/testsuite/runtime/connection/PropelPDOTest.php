@@ -8,14 +8,14 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTestBase.php';
+require_once __DIR__ . '/../../../tools/helpers/bookstore/BookstoreTestBase.php';
 
 /**
  * Test for PropelPDO subclass.
  *
  * @package    runtime.connection
  */
-class PropelPDOTest extends PHPUnit_Framework_TestCase
+class PropelPDOTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testSetAttribute()
@@ -140,7 +140,7 @@ class PropelPDOTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @link       http://propel.phpdb.org/trac/ticket/699
+     * @link       http://trac.propelorm.org/ticket/699
      */
     public function testNestedTransactionRollBackRethrow()
     {
@@ -186,7 +186,7 @@ class PropelPDOTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @link       http://propel.phpdb.org/trac/ticket/699
+     * @link       http://trac.propelorm.org/ticket/699
      */
     public function testNestedTransactionRollBackSwallow()
     {
@@ -312,7 +312,7 @@ class PropelPDOTest extends PHPUnit_Framework_TestCase
         $con->useDebug(false);
         $this->assertEquals(array('PDOStatement'), $con->getAttribute(PDO::ATTR_STATEMENT_CLASS), 'Statement is PDOStatement when debug is false');
         $con->useDebug(true);
-        $this->assertEquals(array('DebugPDOStatement', array($con)), $con->getAttribute(PDO::ATTR_STATEMENT_CLASS), 'statement is DebugPDOStament when debug is true');
+        $this->assertEquals(array('DebugPDOStatement', array($con)), $con->getAttribute(PDO::ATTR_STATEMENT_CLASS), 'statement is DebugPDOStatement when debug is true');
     }
 
     public function testDebugLatestQuery()
@@ -456,6 +456,72 @@ class PropelPDOTest extends PHPUnit_Framework_TestCase
         // return to normal state after test
         $con->setLogger($logger);
         $config->setParameter("debugpdo.logging.methods", array('PropelPDO::exec', 'PropelPDO::query', 'DebugPDOStatement::execute'));
+    }
+
+    /**
+     * Testing if string values will be quoted correctly by DebugPDOStatement::getExecutedQueryString
+     */
+    public function testDebugExecutedQueryStringValue()
+    {
+
+        /**
+         * @var DebugPDO $con
+         */
+        $con = Propel::getConnection(BookPeer::DATABASE_NAME);
+
+        // different method must all result in this given querystring, using a string value
+        $bindParamStringValue = "%Harry%";
+        $expectedQuery = "SELECT book.id FROM `book` WHERE book.title LIKE '{$bindParamStringValue}'";
+
+        // simple statement without params
+        $prepStmt = $con->prepare($expectedQuery);
+        $prepStmt->execute();
+        $this->assertEquals($expectedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        // statement with named placeholder
+        $prepStmt = $con->prepare("SELECT book.id FROM `book` WHERE book.title LIKE :p1");
+        $prepStmt->bindValue(':p1', '%Harry%'); // bind value variant
+        $prepStmt->execute();
+        $this->assertEquals($expectedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        $prepStmt->bindParam(':p1', $bindParamStringValue); // bind param variant
+        $prepStmt->execute();
+        $this->assertEquals($expectedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        // passing params directly
+        $prepStmt->execute(array(':p1' => '%Harry%'));
+        $this->assertEquals($expectedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        // statement with named placeholder, this one won't get substituted
+        $expectedNotSubstitutedQuery = "SELECT book.id FROM `book` WHERE book.title LIKE :name";
+        $prepStmt = $con->prepare($expectedNotSubstitutedQuery);
+        $prepStmt->bindValue(':name', '%Harry%'); // bind value variant
+        $prepStmt->execute();
+        $this->assertEquals($expectedNotSubstitutedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        $prepStmt->bindParam(':name', $bindParamStringValue); // bind param variant
+        $prepStmt->execute();
+        $this->assertEquals($expectedNotSubstitutedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        // passing params directly
+        $prepStmt->execute(array(':name' => '%Harry%'));
+        $this->assertEquals($expectedNotSubstitutedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+
+        // statement with positional placeholder, this one won't get substituted either
+        $expectedNotSubstitutedQuery = "SELECT book.id FROM `book` WHERE book.title LIKE ?";
+        $prepStmt = $con->prepare($expectedNotSubstitutedQuery);
+        $prepStmt->bindValue(1, '%Harry%');
+        $prepStmt->execute();
+        $this->assertEquals($expectedNotSubstitutedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        $prepStmt->bindParam(1, $bindParamStringValue);
+        $prepStmt->execute();
+        $this->assertEquals($expectedNotSubstitutedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
+
+        // passing params directly
+        $prepStmt->execute(array('%Harry%'));
+        $this->assertEquals($expectedNotSubstitutedQuery, $con->getLastExecutedQuery(), 'DebugPDO failed to quote prepared statement on execute properly');
     }
 }
 

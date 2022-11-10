@@ -8,21 +8,21 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../../runtime/lib/Propel.php';
-set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__) . '/../../../fixtures/bookstore/build/classes'));
-Propel::init(dirname(__FILE__) . '/../../../fixtures/bookstore/build/conf/bookstore-conf.php');
+require_once __DIR__ . '/../../../../runtime/lib/Propel.php';
+set_include_path(get_include_path() . PATH_SEPARATOR . realpath(__DIR__ . '/../../../fixtures/bookstore/build/classes'));
+Propel::init(__DIR__ . '/../../../fixtures/bookstore/build/conf/bookstore-conf.php');
 
 /**
  * Base class contains some methods shared by subclass test cases.
  */
-abstract class BookstoreTestBase extends PHPUnit_Framework_TestCase
+abstract class BookstoreTestBase extends \PHPUnit\Framework\TestCase
 {
     protected $con;
 
     /**
      * This is run before each unit test; it populates the database.
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->con = Propel::getConnection(BookPeer::DATABASE_NAME);
@@ -32,7 +32,7 @@ abstract class BookstoreTestBase extends PHPUnit_Framework_TestCase
     /**
      * This is run after each unit test. It empties the database.
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         // Only commit if the transaction hasn't failed.

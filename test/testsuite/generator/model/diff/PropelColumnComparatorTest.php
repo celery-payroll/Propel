@@ -17,9 +17,9 @@ require_once dirname(__FILE__) . '/../../../../../generator/lib/platform/MysqlPl
  *
  * @package    generator.model.diff
  */
-class PropelColumnComparatorTest extends PHPUnit_Framework_TestCase
+class PropelColumnComparatorTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->platform = new MysqlPlatform();
     }
@@ -146,7 +146,7 @@ class PropelColumnComparatorTest extends PHPUnit_Framework_TestCase
     /**
      * @see http://www.propelorm.org/ticket/1141
      */
-    public function testCompareDefaultExrpCurrentTimestamp()
+    public function testCompareDefaultExprCurrentTimestamp()
     {
         $c1 = new Column();
         $c1->getDomain()->setDefaultValue(new ColumnDefaultValue("NOW()", ColumnDefaultValue::TYPE_EXPR));

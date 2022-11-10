@@ -14,21 +14,21 @@ set_include_path(get_include_path() . PATH_SEPARATOR . realpath(dirname(__FILE__
 /**
  * Bse class for tests on the schemas schema
  */
-abstract class SchemasTestBase extends PHPUnit_Framework_TestCase
+abstract class SchemasTestBase extends \PHPUnit\Framework\TestCase
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
-        if (!file_exists(dirname(__FILE__) . '/../../../fixtures/schemas/build/conf/bookstore-conf.php')) {
+        if (!file_exists(__DIR__ . '/../../../fixtures/schemas/build/conf/bookstore-conf.php')) {
             $this->markTestSkipped('You must build the schemas project fot this tests to run');
         }
-        Propel::init(dirname(__FILE__) . '/../../../fixtures/schemas/build/conf/bookstore-conf.php');
+        Propel::init(__DIR__ . '/../../../fixtures/schemas/build/conf/bookstore-conf.php');
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
-        Propel::init(dirname(__FILE__) . '/../../../fixtures/bookstore/build/conf/bookstore-conf.php');
+        Propel::init(__DIR__ . '/../../../fixtures/bookstore/build/conf/bookstore-conf.php');
     }
 }

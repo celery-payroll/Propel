@@ -9,9 +9,9 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/behavior/i18n/I18nBehavior.php';
-require_once dirname(__FILE__) . '/../../../../../runtime/lib/Propel.php';
+require_once __DIR__ . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
+require_once __DIR__ . '/../../../../../generator/lib/behavior/i18n/I18nBehavior.php';
+require_once __DIR__ . '/../../../../../runtime/lib/Propel.php';
 
 /**
  * Tests for I18nBehavior class peer modifier
@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/../../../../../runtime/lib/Propel.php';
  * @version    $Revision$
  * @package    generator.behavior.i18n
  */
-class I18nBehaviorPeerBuilderModifierTest extends PHPUnit_Framework_TestCase
+class I18nBehaviorPeerBuilderModifierTest extends \PHPUnit\Framework\TestCase
 {
     public function testDefaultLocaleConstant()
     {

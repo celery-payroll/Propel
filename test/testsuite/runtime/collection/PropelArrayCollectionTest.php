@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreEmptyTestBase.php';
+require_once __DIR__ . '/../../../tools/helpers/bookstore/BookstoreEmptyTestBase.php';
 
 /**
  * Test class for PropelObjectCollection.
@@ -19,7 +19,7 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreEmp
  */
 class PropelArrayCollectionTest extends BookstoreEmptyTestBase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         BookstoreDataPopulator::populate($this->con);
@@ -45,6 +45,7 @@ class PropelArrayCollectionTest extends BookstoreEmptyTestBase
      */
     public function testSaveOnReadOnlyEntityThrowsException()
     {
+        $this->expectException(PropelException::class);
         $col = new PropelArrayCollection();
         $col->setModel('ContestView');
         $cv = new ContestView();
@@ -67,6 +68,7 @@ class PropelArrayCollectionTest extends BookstoreEmptyTestBase
      */
     public function testDeleteOnReadOnlyEntityThrowsException()
     {
+        $this->expectException(PropelException::class);
         $col = new PropelArrayCollection();
         $col->setModel('ContestView');
         $cv = new ContestView();
@@ -102,7 +104,7 @@ class PropelArrayCollectionTest extends BookstoreEmptyTestBase
         $author->save();
         $books = array(
             array('Title' => 'Mansfield Park', 'ISBN' => '234', 'AuthorId' => $author->getId()),
-            array('Title' => 'Pride And PRejudice', 'ISBN' => '124', 'AuthorId' => $author->getId())
+            array('Title' => 'Pride And Prejudice', 'ISBN' => '124', 'AuthorId' => $author->getId())
         );
         $col = new PropelArrayCollection();
         $col->setModel('Book');
@@ -199,6 +201,7 @@ class PropelArrayCollectionTest extends BookstoreEmptyTestBase
      */
     public function testGetWorkerObjectNoModel()
     {
+        $this->expectException(PropelException::class);
         $col = new TestablePropelArrayCollection();
         $col->getWorkerObject();
     }

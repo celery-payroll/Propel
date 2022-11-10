@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTestBase.php';
+require_once __DIR__ . '/../../../tools/helpers/bookstore/BookstoreTestBase.php';
 
 /**
  * Tests the DbMySQL adapter
@@ -37,10 +37,11 @@ class DBMySQLTest extends BookstoreTestBase
 
     /**
      * @dataProvider getConParams
-     * @expectedException PropelException
+     *
      */
     public function testPrepareParamsThrowsException($conparams)
     {
+        $this->expectException(PropelException::class);
         if (version_compare(PHP_VERSION, '5.3.6', '>=')) {
             $this->markTestSkipped('PHP_VERSION >= 5.3.6, no need to throw an exception.');
         }

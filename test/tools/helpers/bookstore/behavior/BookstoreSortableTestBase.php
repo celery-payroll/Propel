@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../BookstoreTestBase.php';
+require_once __DIR__ . '/../BookstoreTestBase.php';
 
 abstract class BookstoreSortableTestBase extends BookstoreTestBase
 {

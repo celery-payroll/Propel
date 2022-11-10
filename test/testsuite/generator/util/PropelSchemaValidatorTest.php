@@ -16,7 +16,7 @@ require_once dirname(__FILE__) . '/../../../../generator/lib/model/AppData.php';
  *
  * @package    generator.util
  */
-class SchemaValidatorTest extends PHPUnit_Framework_TestCase
+class SchemaValidatorTest extends \PHPUnit\Framework\TestCase
 {
 
     private $xsdFile = 'generator/resources/xsd/database.xsd';
@@ -168,7 +168,7 @@ EOF;
         $this->assertContains('Table "book_book" implements an equal nest relationship for table "book". This feature is not supported', $validator->getErrors());
     }
 
-    public function testValidateReturnsFalseWhenTwoColumnssHaveSamePhpName()
+    public function testValidateReturnsFalseWhenTwoColumnsHaveSamePhpName()
     {
         $column1 = new Column('foo');
         $column2 = new Column('bar');

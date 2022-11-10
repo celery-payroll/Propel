@@ -37,6 +37,7 @@ class MysqlPlatformMigrationTest extends PlatformMigrationTestProvider
             ));
             $platform->setGeneratorConfig($config);
         }
+
         return $platform;
     }
 
@@ -174,7 +175,7 @@ CREATE INDEX `bar_baz_FK` ON `foo` (`id`,`bar`,`baz`);
         $expected = "
 ALTER TABLE `foo1` DROP FOREIGN KEY `foo1_FK_1`;
 
-ALTER TABLE `foo1` ADD CONSTRAINT `foo1_FK_3`
+ALTER TABLE `foo1` ADD CONSTRAINT `foo1_FK_5`
     FOREIGN KEY (`baz`)
     REFERENCES `foo2` (`baz`);
 

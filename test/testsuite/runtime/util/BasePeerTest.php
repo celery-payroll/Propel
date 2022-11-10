@@ -21,7 +21,7 @@ class BasePeerTest extends BookstoreTestBase
 {
 
     /**
-     * @link       http://propel.phpdb.org/trac/ticket/425
+     * @link       http://trac.propelorm.org/ticket/425
      */
     public function testMultipleFunctionInCriteria()
     {
@@ -43,16 +43,16 @@ class BasePeerTest extends BookstoreTestBase
     public function testNeedsSelectAliases()
     {
         $c = new Criteria();
-        $this->assertFalse(BasePeer::needsSelectAliases($c), 'Empty Criterias dont need aliases');
+        $this->assertFalse(BasePeer::needsSelectAliases($c), 'Empty Criterias don\'t need aliases');
 
         $c = new Criteria();
         $c->addSelectColumn(BookPeer::ID);
         $c->addSelectColumn(BookPeer::TITLE);
-        $this->assertFalse(BasePeer::needsSelectAliases($c), 'Criterias with distinct column names dont need aliases');
+        $this->assertFalse(BasePeer::needsSelectAliases($c), 'Criterias with distinct column names don\'t need aliases');
 
         $c = new Criteria();
         BookPeer::addSelectColumns($c);
-        $this->assertFalse(BasePeer::needsSelectAliases($c), 'Criterias with only the columns of a model dont need aliases');
+        $this->assertFalse(BasePeer::needsSelectAliases($c), 'Criterias with only the columns of a model don\'t need aliases');
 
         $c = new Criteria();
         $c->addSelectColumn(BookPeer::ID);
@@ -226,6 +226,7 @@ class BasePeerTest extends BookstoreTestBase
      */
     public function testDoDeleteNoCondition()
     {
+        $this->expectException(PropelException::class);
         $con = Propel::getConnection();
         $c = new Criteria(BookPeer::DATABASE_NAME);
         BasePeer::doDelete($c, $con);
@@ -236,6 +237,7 @@ class BasePeerTest extends BookstoreTestBase
      */
     public function testDoDeleteJoin()
     {
+        $this->expectException(PropelException::class);
         $con = Propel::getConnection();
         $c = new Criteria(BookPeer::DATABASE_NAME);
         $c->add(BookPeer::TITLE, 'War And Peace');
@@ -250,7 +252,7 @@ class BasePeerTest extends BookstoreTestBase
         $c->add(BookPeer::TITLE, 'War And Peace');
         BasePeer::doDelete($c, $con);
         $expectedSQL = "DELETE FROM `book` WHERE book.title='War And Peace'";
-        $this->assertEquals($expectedSQL, $con->getLastExecutedQuery(), 'doDelete() translates a contition into a WHERE');
+        $this->assertEquals($expectedSQL, $con->getLastExecutedQuery(), 'doDelete() translates a condition into a WHERE');
     }
 
     public function testDoDeleteSeveralConditions()

@@ -8,13 +8,13 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../../generator/lib/util/PropelSQLParser.php';
+require_once __DIR__ . '/../../../../generator/lib/util/PropelSQLParser.php';
 
 /**
  *
  * @package    generator.util
  */
-class PropelSQLParserTest extends PHPUnit_Framework_TestCase
+class PropelSQLParserTest extends \PHPUnit\Framework\TestCase
 {
     public function stripSqlCommentsDataProvider()
     {
@@ -106,7 +106,7 @@ class PropelSQLParserTest extends PHPUnit_Framework_TestCase
     {
         // multiple characters are not supported for now
         $parser = new PropelSQLParser();
-        $parser->setSQL('DELIMITER ||');
+        $parser->setSQL('DELIMITER |');
         $parser->explodeIntoStatements();
     }
 

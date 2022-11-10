@@ -17,7 +17,7 @@ require_once dirname(__FILE__) . '/../../../../tools/helpers/bookstore/Bookstore
  * object operations.  The _idea_ here is to test every possible generated method
  * from Object.tpl; if necessary, bookstore will be expanded to accommodate this.
  *
- * The database is relaoded before every test and flushed after every test.  This
+ * The database is reloaded before every test and flushed after every test.  This
  * means that you can always rely on the contents of the databases being the same
  * for each test method in this class.  See the BookstoreDataPopulator::populate()
  * method for the exact contents of the database.
@@ -29,7 +29,7 @@ require_once dirname(__FILE__) . '/../../../../tools/helpers/bookstore/Bookstore
 class GeneratedObjectRelTest extends BookstoreEmptyTestBase
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
     }
@@ -103,7 +103,7 @@ class GeneratedObjectRelTest extends BookstoreEmptyTestBase
 
     /**
      * Tests reverse setting of relationships, saving one of the objects first.
-     * @link       http://propel.phpdb.org/trac/ticket/508
+     * @link       http://trac.propelorm.org/ticket/508
      */
     public function testManyToMany_Dir2_Saved()
     {
@@ -134,13 +134,12 @@ class GeneratedObjectRelTest extends BookstoreEmptyTestBase
         $this->assertEquals(1, count($list->getBookListRels()) );
         $this->assertEquals(1, count($book->getBookListRels()) );
         $this->assertEquals(1, count(BookListRelPeer::doSelect(new Criteria())) );
-
     }
 
     public function testManyToManyGetterExists()
     {
-        $this->assertTrue(method_exists('BookClubList', 'getBooks'), 'Object generator correcly adds getter for the crossRefFk');
-        $this->assertFalse(method_exists('BookClubList', 'getBookClubLists'), 'Object generator correcly adds getter for the crossRefFk');
+        $this->assertTrue(method_exists('BookClubList', 'getBooks'), 'Object generator correctly adds getter for the crossRefFk');
+        $this->assertFalse(method_exists('BookClubList', 'getBookClubLists'), 'Object generator correctly adds getter for the crossRefFk');
     }
 
     public function testManyToManyGetterNewObject()
@@ -237,7 +236,7 @@ class GeneratedObjectRelTest extends BookstoreEmptyTestBase
 
     /**
      * Test behavior of columns that are implicated in multiple foreign keys.
-     * @link       http://propel.phpdb.org/trac/ticket/228
+     * @link       http://trac.propelorm.org/ticket/228
      */
     public function testMultiFkImplication()
     {
@@ -314,7 +313,7 @@ class GeneratedObjectRelTest extends BookstoreEmptyTestBase
 
     /**
      * This tests to see whether modified objects are being silently overwritten by calls to fk accessor methods.
-     * @link       http://propel.phpdb.org/trac/ticket/509#comment:5
+     * @link       http://trac.propelorm.org/ticket/509#comment:5
      */
     public function testModifiedObjectOverwrite()
     {
@@ -819,7 +818,8 @@ class GeneratedObjectRelTest extends BookstoreEmptyTestBase
 
         $books = $author->getBooks();
         $this->assertCount(1, $books);
-        $this->assertEquals('Propel2 Book', reset($books)->getTitle());
+
+        $this->assertEquals('Propel2 Book', $books->getCurrent()->getTitle());
 
         $author->save();
         $book->save();
@@ -865,7 +865,7 @@ class GeneratedObjectRelTest extends BookstoreEmptyTestBase
 
         $bookSummaries = $book->getBookSummarys();
         $this->assertCount(1, $bookSummaries);
-        $this->assertEquals('summary2 Propel Book', reset($bookSummaries)->getSummary());
+        $this->assertEquals('summary2 Propel Book', $bookSummaries->getCurrent()->getSummary());
 
         $book->save();
         $bookSummary2->save();
@@ -908,7 +908,7 @@ class GeneratedObjectRelTest extends BookstoreEmptyTestBase
 
         BookPeer::clearInstancePool();
 
-        $summary = $this->getMock('BookSummary');
+        $summary = $this->createMock('BookSummary');
         $summary
             ->expects($this->once())
             ->method('isDeleted')

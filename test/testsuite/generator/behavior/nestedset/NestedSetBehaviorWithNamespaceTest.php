@@ -8,14 +8,14 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../../tools/helpers/bookstore/BookstoreTestBase.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/behavior/nestedset/NestedSetBehavior.php';
-require_once dirname(__FILE__) . '/../../../../../runtime/lib/Propel.php';
+require_once __DIR__ . '/../../../../tools/helpers/bookstore/BookstoreTestBase.php';
+require_once __DIR__ . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
+require_once __DIR__ . '/../../../../../generator/lib/behavior/nestedset/NestedSetBehavior.php';
+require_once __DIR__ . '/../../../../../runtime/lib/Propel.php';
 
 class NestedSetBehaviorWithNamespaceTest extends BookstoreTestBase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -11,7 +11,7 @@
 require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTestBase.php';
 
 /**
- * Tests the DbOracle adapter
+ * Tests adapter independent functionality
  *
  * @see        BookstoreDataPopulator
  * @author     Francois EZaninotto
@@ -122,5 +122,4 @@ class DBAdapterTest extends BookstoreTestBase
         $this->assertEquals('SELECT book.id AS book_id_1, book.id AS book_id', $selectSql, 'createSelectSqlPart() aliases all columns if passed true as last parameter');
         $this->assertEquals(array(), $fromClause, 'createSelectSqlPart() does not add the tables from an all-aliased list of select columns');
     }
-
 }

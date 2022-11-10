@@ -9,9 +9,9 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
-require_once dirname(__FILE__) . '/../../../../../generator/lib/behavior/versionable/VersionableBehavior.php';
-require_once dirname(__FILE__) . '/../../../../../runtime/lib/Propel.php';
+require_once __DIR__ . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
+require_once __DIR__ . '/../../../../../generator/lib/behavior/versionable/VersionableBehavior.php';
+require_once __DIR__ . '/../../../../../runtime/lib/Propel.php';
 
 /**
  * Tests for VersionableBehavior class
@@ -20,13 +20,12 @@ require_once dirname(__FILE__) . '/../../../../../runtime/lib/Propel.php';
  * @version    $Revision$
  * @package    generator.behavior.versionable
  */
-class VersionableBehaviorObjectBuilderModifierTest extends PHPUnit_Framework_TestCase
+class VersionableBehaviorObjectBuilderModifierTest extends \PHPUnit\Framework\TestCase
 {
-
-    public function setUp()
+    public function setUp(): void
     {
         if (!class_exists('VersionableBehaviorTest1')) {
-            $schema = <<<EOF
+            $schema = <<<XML
 <database name="versionable_behavior_test_1">
     <table name="versionable_behavior_test_1">
         <column name="id" primaryKey="true" type="INTEGER" autoIncrement="true" />
@@ -65,14 +64,13 @@ class VersionableBehaviorObjectBuilderModifierTest extends PHPUnit_Framework_Tes
         </foreign-key>
         <behavior name="versionable" />
     </table>
-
 </database>
-EOF;
+XML;
             PropelQuickBuilder::buildSchema($schema);
         }
 
         if (!class_exists('VersionableBehaviorTest6')) {
-            $schema2 = <<<EOF
+            $schema2 = <<<XML
         <database name="versionable_behavior_test_2" defaultPhpNamingMethod="nochange">
             <table name="VersionableBehaviorTest6">
                 <column name="Id" primaryKey="true" type="INTEGER" autoIncrement="true" />
@@ -100,12 +98,13 @@ EOF;
                     <parameter name="version_comment_column" value="MyComment" />
                 </behavior>
             </table>
-EOF;
+        </database>
+XML;
             PropelQuickBuilder::buildSchema($schema2);
         }
 
         if (!class_exists('VersionableBehaviorTest8')) {
-            $schema3 = <<<EOF
+            $schema3 = <<<XML
         <database name="versionable_behavior_test_3">
             <table name="VersionableBehaviorTest8">
                 <column name="alter_id" primaryKey="true" type="INTEGER" autoIncrement="true" />
@@ -127,12 +126,13 @@ EOF;
                 </foreign-key>
                 <behavior name="versionable" />
             </table>
-EOF;
+        </database>
+XML;
             PropelQuickBuilder::buildSchema($schema3);
         }
 
         if (!class_exists('VersionableBehaviorTest10')) {
-            $schema4 = <<<EOF
+            $schema4 = <<<XML
         <database name="versionable_behavior_test_4">
             <table name="VersionableBehaviorTest10">
                 <column name="id" primaryKey="true" type="INTEGER" autoIncrement="true" />
@@ -162,8 +162,33 @@ EOF;
                 </foreign-key>
             </table>
         </database>
-EOF;
+XML;
             PropelQuickBuilder::buildSchema($schema4);
+        }
+
+        if (!class_exists('VersionableBehaviorTest13')) {
+            $schema5 = <<<XML
+        <database name="versionable_behavior_test_5">
+            <table name="VersionableBehaviorTest13">
+                <column name="id" primaryKey="true" type="INTEGER" autoIncrement="true" />
+                <column name="name" type="varchar" size="64" />
+
+                <behavior name="versionable" />
+            </table>
+
+            <table name="VersionableBehaviorTest14">
+                <column name="foo_id" primaryKey="true" type="INTEGER" autoIncrement="false" />
+                <column name="value" type="VARCHAR" size="25" />
+
+                <behavior name="versionable" />
+
+                <foreign-key foreignTable="VersionableBehaviorTest13">
+                    <reference local="foo_id" foreign="id" />
+                </foreign-key>
+            </table>
+        </database>
+XML;
+            PropelQuickBuilder::buildSchema($schema5);
         }
     }
 
@@ -425,6 +450,7 @@ EOF;
      */
     public function testToVersionThrowsExceptionOnIncorrectVersion()
     {
+        $this->expectException(PropelException::class);
         $o = new VersionableBehaviorTest1();
         $o->setBar(123); // version 1
         $o->save();
@@ -891,17 +917,17 @@ EOF;
         $b1->save();
     }
 
-  public function testWithInheritance()
-  {
-        $b1 = new VersionableBehaviorTest8Foo();
-        $b1->save();
+    public function testWithInheritance()
+    {
+          $b1 = new VersionableBehaviorTest8Foo();
+          $b1->save();
 
-        $b1->setFoobar('name');
-        $b1->save();
+          $b1->setFoobar('name');
+          $b1->save();
 
-        $object = $b1->getOneVersion($b1->getVersion());
-        $this->assertTrue($object instanceof Versionablebehaviortest8Version);
-  }
+          $object = $b1->getOneVersion($b1->getVersion());
+          $this->assertTrue($object instanceof Versionablebehaviortest8Version);
+    }
 
     public function testEnforceVersioning()
     {
