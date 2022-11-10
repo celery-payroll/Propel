@@ -8,7 +8,7 @@
  * @license    MIT License
  */
 
-require_once dirname(__FILE__) . '/../../../tools/helpers/schemas/SchemasTestBase.php';
+require_once __DIR__ . '/../../../tools/helpers/schemas/SchemasTestBase.php';
 
 /**
  * Test class for ModelCriteria withs schemas.
@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/schemas/SchemasTestBas
 class ModelCriteriaWithSchemaTest extends SchemasTestBase
 {
 
-    protected function assertCriteriaTranslation($criteria, $expectedSql, $expectedParams, $message = '')
+    protected function assertCriteriaTranslation($criteria, $expectedSql, $expectedParams, $message = ''): void
     {
         $params = array();
         $result = BasePeer::createSelectSql($criteria, $params);
@@ -29,7 +29,7 @@ class ModelCriteriaWithSchemaTest extends SchemasTestBase
         $this->assertEquals($expectedParams, $params, $message);
     }
 
-    public static function conditionsForTestReplaceNamesWithSchemas()
+    public static function conditionsForTestReplaceNamesWithSchemas(): array
     {
         return array(
             array('ContestBookstoreContest.PrizeBookId = ?', 'PrizeBookId', 'contest.bookstore_contest.prize_book_id = ?'), // basic case
@@ -44,13 +44,13 @@ class ModelCriteriaWithSchemaTest extends SchemasTestBase
     /**
      * @dataProvider conditionsForTestReplaceNamesWithSchemas
      */
-    public function testReplaceNamesWithSchemas($origClause, $columnPhpName = false, $modifiedClause)
+    public function testReplaceNamesWithSchemas($origClause, $columnPhpName, $modifiedClause): void
     {
         $c = new TestableModelCriteriaWithSchema('bookstore-schemas', 'ContestBookstoreContest');
-        $this->doTestReplaceNames($c, ContestBookstoreContestPeer::getTableMap(),  $origClause, $columnPhpName = false, $modifiedClause);
+        $this->doTestReplaceNames($c, ContestBookstoreContestPeer::getTableMap(),  $origClause, $modifiedClause, $columnPhpName = false);
     }
 
-    public function doTestReplaceNames($c, $tableMap, $origClause, $columnPhpName = false, $modifiedClause)
+    public function doTestReplaceNames($c, $tableMap, $origClause, $modifiedClause, $columnPhpName = false): void
     {
         $c->replaceNames($origClause);
         $columns = $c->replacedColumns;
@@ -66,7 +66,7 @@ class TestableModelCriteriaWithSchema extends ModelCriteria
 {
     public $joins = array();
 
-    public function replaceNames(&$clause)
+    public function replaceNames(&$clause): bool
     {
         return parent::replaceNames($clause);
     }

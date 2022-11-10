@@ -104,7 +104,7 @@ EOF;
         }
     }
 
-    public function testModifyTableRelatesOneToOneDelegate()
+    public function testModifyTableRelatesOneToOneDelegate(): void
     {
         $delegateTable = DelegateDelegatePeer::getTableMap();
         $this->assertEquals(2, count($delegateTable->getColumns()));
@@ -113,7 +113,7 @@ EOF;
         $this->assertTrue(method_exists('DelegateDelegate', 'getDelegateMain'));
     }
 
-    public function testOneToOneDelegationCreatesANewDelegateIfNoneExists()
+    public function testOneToOneDelegationCreatesANewDelegateIfNoneExists(): void
     {
         $this->markTestSkipped();
         $main = new DelegateMain();

@@ -739,7 +739,7 @@ class TableMap
      */
     protected function hasPrefix($data)
     {
-        return (strpos($data, $this->prefix) === 0);
+        return null !== $this->prefix && 0 === strpos($data, $this->prefix);
     }
 
     /**
