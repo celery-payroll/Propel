@@ -224,6 +224,8 @@ protected function createRawSlug()
  */
 protected static function cleanupSlugPart(\$slug, \$replacement = '" . $this->getParameter('replacement') . "')
 {
+    \$slug = (string) \$slug;
+    
     // transliterate
     if (function_exists('iconv')) {
         \$slug = iconv('utf-8', 'us-ascii//TRANSLIT', \$slug);
@@ -417,6 +419,9 @@ public function findOneBySlug(\$slug, \$con = null)
      */
     protected function underscore($string)
     {
-        return strtolower(preg_replace(array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'), array('\\1_\\2', '\\1_\\2'), strtr($string, '_', '.')));
+        return strtolower(preg_replace(
+            ['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'], ['\\1_\\2', '\\1_\\2'],
+            str_replace('_', '.', $string)
+        ));
     }
 }

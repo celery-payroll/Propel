@@ -78,26 +78,32 @@ abstract class XMLElement
     /**
      * Converts value specified in XML to a boolean value.
      * This is to support the default value when used w/ a boolean column.
-     * @return value
+     *
+     * @param $val
+     * @return bool
      */
-    protected function booleanValue($val)
+    protected function booleanValue($val): bool
     {
+        if (null === $val) {
+            return false;
+        }
+
         if (is_numeric($val)) {
             return (bool) $val;
-        } else {
-            return (in_array(strtolower($val), array('true', 't', 'y', 'yes'), true) ? true : false);
         }
+
+        return in_array(strtolower($val), ['true', 't', 'y', 'yes'], true);
     }
 
     protected function getDefaultValueForArray($stringValue)
     {
-        $stringValue = trim($stringValue);
+        $stringValue = trim((string) $stringValue);
 
         if (empty($stringValue)) {
             return null;
         }
 
-        $values = array();
+        $values = [];
         foreach (explode(',', $stringValue) as $v) {
             $values[] = trim($v);
         }

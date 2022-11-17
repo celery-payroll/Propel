@@ -359,14 +359,17 @@ class PropelCollection extends ArrayObject implements Serializable
     /**
      * @return string
      */
-    public function serialize()
+    public function serialize(): string
     {
-        $repr = array(
+        return serialize($this->__serialize());
+    }
+
+    public function __serialize(): array
+    {
+        return [
             'data'   => $this->getArrayCopy(),
             'model'  => $this->model,
-        );
-
-        return serialize($repr);
+        ];
     }
 
     /**
@@ -374,11 +377,15 @@ class PropelCollection extends ArrayObject implements Serializable
      *
      * @return void
      */
-    public function unserialize($data)
+    public function unserialize(string $data): void
     {
-        $repr = unserialize($data);
-        $this->exchangeArray($repr['data']);
-        $this->model = $repr['model'];
+        $this->__unserialize(unserialize($data));
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->exchangeArray($data['data']);
+        $this->model = $data['model'];
     }
 
     // IteratorAggregate method
@@ -389,7 +396,7 @@ class PropelCollection extends ArrayObject implements Serializable
      *
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         $this->iterator = new ArrayIterator($this);
 
@@ -399,7 +406,7 @@ class PropelCollection extends ArrayObject implements Serializable
     /**
      * @return ArrayIterator
      */
-    public function getInternalIterator()
+    public function getInternalIterator(): ArrayIterator
     {
         if (null === $this->iterator) {
             return $this->getIterator();

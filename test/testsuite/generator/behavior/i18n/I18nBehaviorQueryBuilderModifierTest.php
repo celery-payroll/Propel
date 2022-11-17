@@ -9,6 +9,8 @@
  * @license    MIT License
  */
 
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__ . '/../../../../../generator/lib/util/PropelQuickBuilder.php';
 require_once __DIR__ . '/../../../../../generator/lib/behavior/i18n/I18nBehavior.php';
 require_once __DIR__ . '/../../../../../runtime/lib/Propel.php';
@@ -20,7 +22,7 @@ require_once __DIR__ . '/../../../../../runtime/lib/Propel.php';
  * @version    $Revision$
  * @package    generator.behavior.i18n
  */
-class I18nBehaviorQueryBuilderModifierTest extends \PHPUnit\Framework\TestCase
+class I18nBehaviorQueryBuilderModifierTest extends TestCase
 {
     public function setUp(): void
     {
@@ -107,7 +109,7 @@ EOF;
             ->joinI18n('fr_FR')
             ->find($con);
         $expected = "SELECT i18n_behavior_test_11.id, i18n_behavior_test_11.foo FROM i18n_behavior_test_11 LEFT JOIN i18n_behavior_test_11_i18n ON (i18n_behavior_test_11.id=i18n_behavior_test_11_i18n.id AND i18n_behavior_test_11_i18n.locale = 'fr_FR')";
-        $this->assertEquals($expected, $con->getLastExecutedQuery());
+        $this->assertSame($expected, $con->getLastExecutedQuery());
         $con->useDebug(false);
     }
 

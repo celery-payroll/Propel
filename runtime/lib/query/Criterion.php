@@ -70,14 +70,14 @@ class Criterion
      * @param Criteria $outer      The outer class (this is an "inner" class).
      * @param string   $column     TABLE.COLUMN format.
      * @param mixed    $value
-     * @param string   $comparison
+     * @param string|null   $comparison
      * @param string   $type
      */
     public function __construct(Criteria $outer, $column, $value, $comparison = null, $type = null)
     {
         $this->value = $value;
-        $dotPos = strrpos($column, '.');
-        if ($dotPos === false || $comparison == Criteria::RAW) {
+        $dotPos = $column ? strrpos($column, '.') : false;
+        if ($dotPos === false || $comparison === Criteria::RAW) {
             // no dot => aliased column
             $this->table = null;
             $this->column = $column;
@@ -85,7 +85,7 @@ class Criterion
             $this->table = substr($column, 0, $dotPos);
             $this->column = substr($column, $dotPos + 1);
         }
-        $this->comparison = ($comparison === null) ? Criteria::EQUAL : $comparison;
+        $this->comparison = $comparison ?? Criteria::EQUAL;
         $this->type = $type;
         $this->init($outer);
     }

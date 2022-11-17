@@ -722,7 +722,7 @@ class Table extends ScopedElement implements IDMethod
             }
             $this->columnList[] = $col;
             $this->columnsByName[$col->getName()] = $col;
-            $this->columnsByLowercaseName[strtolower($col->getName())] = $col;
+            $this->columnsByLowercaseName[strtolower((string) $col->getName())] = $col;
             $this->columnsByPhpName[$col->getPhpName()] = $col;
             $col->setPosition(count($this->columnList));
             $this->needsTransactionInPostgres |= $col->requiresTransactionInPostgres();

@@ -263,11 +263,11 @@ class GeneratorConfig implements GeneratorConfigInterface
                 // probably using the command line, which doesn't accept whitespace
                 // therefore base64 encoded
                 $this->parseBuildConnections(base64_decode($buildTimeConfigString));
-            } elseif (file_exists($buildTimeConfigPath)) {
+            } elseif ($buildTimeConfigPath && file_exists($buildTimeConfigPath)) {
                 // configuration stored in a buildtime-conf.xml file
                 $this->parseBuildConnections(file_get_contents($buildTimeConfigPath));
             } else {
-                $this->buildConnections = array();
+                $this->buildConnections = [];
             }
         }
 
@@ -278,14 +278,14 @@ class GeneratorConfig implements GeneratorConfigInterface
     {
         $conf = simplexml_load_string($xmlString);
         $this->defaultBuildConnection = (string) $conf->propel->datasources['default'];
-        $buildConnections = array();
+        $buildConnections = [];
         foreach ($conf->propel->datasources->datasource as $datasource) {
-            $buildConnections[(string) $datasource['id']] = array(
+            $buildConnections[(string) $datasource['id']] = [
                 'adapter'  => (string) $datasource->adapter,
                 'dsn'      => (string) $datasource->connection->dsn,
                 'user'     => (string) $datasource->connection->user,
                 'password' => (string) $datasource->connection->password,
-            );
+            ];
         }
         $this->buildConnections = $buildConnections;
     }

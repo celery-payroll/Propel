@@ -227,7 +227,7 @@ class PropelPDO extends PDO
      *
      * @return boolean
      */
-    public function beginTransaction()
+    public function beginTransaction(): bool
     {
         $return = true;
         if (!$this->nestedTransactionCount) {
@@ -250,7 +250,7 @@ class PropelPDO extends PDO
      *
      * @throws PropelException
      */
-    public function commit()
+    public function commit(): bool
     {
         $return = true;
         $opcount = $this->nestedTransactionCount;
@@ -279,7 +279,7 @@ class PropelPDO extends PDO
      *
      * @return boolean Whether operation was successful.
      */
-    public function rollBack()
+    public function rollBack(): bool
     {
         $return = true;
         $opcount = $this->nestedTransactionCount;
@@ -333,11 +333,11 @@ class PropelPDO extends PDO
      * This is overridden here to provide support for setting Propel-specific attributes too.
      *
      * @param integer $attribute The attribute to set (e.g. PropelPDO::PROPEL_ATTR_CACHE_PREPARES).
-     * @param mixed   $value     The attribute value.
+     * @param mixed $value The attribute value.
      *
-     * @return void
+     * @return bool
      */
-    public function setAttribute($attribute, $value)
+    public function setAttribute(int $attribute, mixed $value): bool
     {
         switch ($attribute) {
             case self::PROPEL_ATTR_CACHE_PREPARES:
@@ -347,8 +347,10 @@ class PropelPDO extends PDO
                 $this->connectionName = $value;
                 break;
             default:
-                parent::setAttribute($attribute, $value);
+                return parent::setAttribute($attribute, $value);
         }
+
+        return true;
     }
 
     /**
@@ -359,15 +361,13 @@ class PropelPDO extends PDO
      * @param  integer $attribute The attribute to get (e.g. PropelPDO::PROPEL_ATTR_CACHE_PREPARES).
      * @return mixed
      */
-    public function getAttribute($attribute)
+    public function getAttribute(int $attribute): mixed
     {
         switch ($attribute) {
             case self::PROPEL_ATTR_CACHE_PREPARES:
                 return $this->cachePreparedStatements;
-                break;
             case self::PROPEL_ATTR_CONNECTION_NAME:
                 return $this->connectionName;
-                break;
             default:
                 return parent::getAttribute($attribute);
         }
@@ -381,30 +381,30 @@ class PropelPDO extends PDO
      *  - Add query caching support if the PropelPDO::PROPEL_ATTR_CACHE_PREPARES was set to true.
      *
      * @param string $sql            This must be a valid SQL statement for the target database server.
-     * @param array  $driver_options One $array or more key => value pairs to set attribute values
+     * @param array  $options One $array or more key => value pairs to set attribute values
      *                                      for the PDOStatement object that this method returns.
      *
      * @return PDOStatement
      */
-    public function prepare($sql, $driver_options = array())
+    public function prepare(string $query, array $options = []): PDOStatement
     {
         if ($this->useDebug) {
             $debug = $this->getDebugSnapshot();
         }
 
         if ($this->cachePreparedStatements) {
-            if (!isset($this->preparedStatements[$sql])) {
-                $return = parent::prepare($sql, $driver_options);
-                $this->preparedStatements[$sql] = $return;
+            if (!isset($this->preparedStatements[$query])) {
+                $return = parent::prepare($query, $options);
+                $this->preparedStatements[$query] = $return;
             } else {
-                $return = $this->preparedStatements[$sql];
+                $return = $this->preparedStatements[$query];
             }
         } else {
-            $return = parent::prepare($sql, $driver_options);
+            $return = parent::prepare($query, $options);
         }
 
         if ($this->useDebug) {
-            $this->log($sql, null, __METHOD__, $debug);
+            $this->log($query, null, __METHOD__, $debug);
         }
 
         return $return;
@@ -417,7 +417,7 @@ class PropelPDO extends PDO
      * @param  string  $sql
      * @return integer
      */
-    public function exec($sql)
+    public function exec($sql): int|false
     {
         if ($this->useDebug) {
             $debug = $this->getDebugSnapshot();
@@ -444,7 +444,7 @@ class PropelPDO extends PDO
      *
      * @return PDOStatement
      */
-    public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, ...$fetch_mode_args)
+    public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, ...$fetch_mode_args): PDOStatement
     {
         if ($this->useDebug) {
             $debug = $this->getDebugSnapshot();

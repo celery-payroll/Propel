@@ -155,20 +155,20 @@ class PropelArrayCollection extends PropelCollection
     }
 
     /**
-     * Synonym for toArray(), to provide a similar interface to PopelObjectCollection
+     * Synonym for toArray(), to provide a similar interface to PropelObjectCollection
      *
      * @param string  $keyColumn
      * @param boolean $usePrefix
      *
      * @return array
      */
-    public function getArrayCopy($keyColumn = null, $usePrefix = false)
+    public function getArrayCopy($keyColumn = null, $usePrefix = false): array
     {
         if (null === $keyColumn && false === $usePrefix) {
             return parent::getArrayCopy();
-        } else {
-            return $this->toArray($keyColumn, $usePrefix);
         }
+
+        return $this->toArray($keyColumn, $usePrefix);
     }
 
     /**

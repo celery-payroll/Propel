@@ -378,8 +378,8 @@ class PropelTypes
      * @param  string  $phpType The PHP type to check
      * @return boolean
      */
-    public static function isPhpArrayType($phpType)
+    public static function isPhpArrayType($phpType): bool
     {
-        return strtoupper($phpType) === self::PHP_ARRAY;
+        return null !== $phpType && strtoupper($phpType) === self::PHP_ARRAY;
     }
 }

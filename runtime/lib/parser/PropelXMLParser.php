@@ -116,7 +116,7 @@ class PropelXMLParser extends PropelParser
                 $child = $element->ownerDocument->createCDATASection($value);
                 $element->appendChild($child);
             } else {
-                $child = $element->ownerDocument->createTextNode($value);
+                $child = $element->ownerDocument->createTextNode((string) $value);
                 $element->appendChild($child);
             }
             $rootElement->appendChild($element);

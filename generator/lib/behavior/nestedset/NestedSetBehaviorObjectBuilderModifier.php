@@ -1494,7 +1494,7 @@ public function deleteDescendants(PropelPDO \$con = null)
  *
  * @return     RecursiveIterator
  */
-public function getIterator()
+public function getIterator(): NestedSetRecursiveIterator
 {
     return new NestedSetRecursiveIterator(\$this);
 }

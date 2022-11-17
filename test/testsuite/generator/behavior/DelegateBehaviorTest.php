@@ -113,6 +113,10 @@ EOF;
         $this->assertTrue(method_exists('DelegateDelegate', 'getDelegateMain'));
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testOneToOneDelegationCreatesANewDelegateIfNoneExists(): void
     {
         $this->markTestSkipped();
@@ -125,6 +129,10 @@ EOF;
         $this->assertEquals('foo', $main->getSubtitle());
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testManyToOneDelegationCreatesANewDelegateIfNoneExists()
     {
         $this->markTestSkipped();
@@ -137,6 +145,10 @@ EOF;
         $this->assertEquals('foo', $main->getSummary());
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testOneToOneDelegationUsesExistingDelegateIfExists()
     {
         $this->markTestSkipped();
@@ -147,6 +159,10 @@ EOF;
         $this->assertEquals('bar', $main->getSubtitle());
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testManyToOneDelegationUsesExistingDelegateIfExists()
     {
         $this->markTestSkipped();
@@ -157,6 +173,10 @@ EOF;
         $this->assertEquals('bar', $main->getSummary());
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testAModelCanHaveSeveralDelegates()
     {
         $this->markTestSkipped();
@@ -186,6 +206,10 @@ EOF;
         $main->setBody('baz');
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testOneToOneDelegatesCanBePersisted()
     {
         $this->markTestSkipped();
@@ -197,6 +221,10 @@ EOF;
         $this->assertNull($main->getSecondDelegateDelegate());
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testManyToOneDelegatesCanBePersisted()
     {
         $this->markTestSkipped();
@@ -208,6 +236,10 @@ EOF;
         $this->assertNull($main->getDelegateDelegate());
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testDelegateSimulatesClassTableInheritance()
     {
         $this->markTestSkipped();
@@ -223,6 +255,10 @@ EOF;
         $basketballer->save(); // should not throw exception
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testDelegateSimulatesMultipleClassTableInheritance()
     {
         $this->markTestSkipped();
@@ -243,6 +279,10 @@ EOF;
         $footballer->save(); // should not throw exception
     }
 
+    /**
+     * @group ignore
+     * @return void
+     */
     public function testTablePrefixSameDatabase()
     {
         $this->markTestSkipped();
