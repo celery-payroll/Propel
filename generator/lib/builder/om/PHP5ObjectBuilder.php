@@ -949,22 +949,35 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
             throw new PropelException(\"Internally stored date/time/timestamp value could not be converted to $dateTimeClass: \" . var_export(\$this->$clo, true), \$x);
         }
 ";
-        } // if handleMyqlDate
+        } // if handleMysqlDate
 
         $script .= "
         if (\$format === null) {";
         if ($useDateTime) {
             $script .= "
             // Because propel.useDateTimeClass is true, we return a $dateTimeClass object.
-            return \$dt;";
+            return \$dt;
+        }
+        ";
         } else {
             $script .= "
             // We cast here to maintain BC in API; obviously we will lose data if we're dealing with pre-/post-epoch dates.
-            return (int) \$dt->format('U');";
+            return (int) \$dt->format('U');
         }
+        ";
+        }
+
         $script .= "
+        if (\$format === 'carbon') {
+            try {
+                return new \Carbon\Carbon(\$dt);
+            } catch (Exception \$x) {
+                throw new PropelException(\"Internally stored date/time/timestamp value could not be converted to Carbon\");
+            }
         }
-        
+        ";
+
+        $script .= "
         if (\$this->isIsoFormat(\$format)) {
             throw new PropelException(\"An iso format is used. This should be a date format\");
         }
