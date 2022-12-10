@@ -429,14 +429,14 @@ abstract class BaseObject
     /**
      * Checks if the format is a iso format.
      *
-     * @param $format
+     * @param string $strFormat
      * @return bool
      */
-    protected function isIsoFormat($format)
+    protected function isIsoFormat($strFormat)
     {
         $arrMatches = ["MM", "DD", "YYYY", "ddd", "HH", "mm"];
-        foreach($arrMatches as $string) {
-            if (strpos($string, $format) !== FALSE) {
+        foreach($arrMatches as $strMatch) {
+            if (mb_strpos($strFormat, $strMatch) !== false) {
                 return true;
             }
         }
