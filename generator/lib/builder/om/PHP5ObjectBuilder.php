@@ -981,6 +981,10 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         if (\$this->isIsoFormat(\$format)) {
             throw new PropelException(\"An iso format is used. This should be a date format\");
         }
+        
+        if (strpos(\$format, '%') !== false) {
+            throw new PropelException(\"A strftime format is used. This should be a date format\");
+        }
 
         return \$dt->format(\$format);
         ";
