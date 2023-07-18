@@ -1976,12 +1976,19 @@ class ModelCriteria extends Criteria
     {
         if (strpos($phpName, '.') === false) {
             $prefix = $this->getModelAliasOrName();
+            $tableName = '';
         } else {
             // $prefix could be either class name or table name
             $arrName = explode('.', $phpName);
             $phpName = array_pop($arrName);
             $prefix = implode(".", $arrName);
             //list($prefix, $phpName) = explode('.', $phpName);
+
+            /**
+             * If prefix contains schema and table name for example 'core.account' .
+             * the prefix is not found in the $this->joins array, there for we also try to find on the table name.
+             */
+            $tableName = $this->databaseFormatToPascalCase(array_pop($arrName));
         }
 
         if ($prefix == $this->getModelAliasOrName() || $prefix == $this->getTableMap()->getName()) {
@@ -1992,6 +1999,8 @@ class ModelCriteria extends Criteria
             $tableMap = $this->joins[$prefix]->getTableMap();
         } elseif ($this->hasSelectQuery($prefix)) {
             return $this->getColumnFromSubQuery($prefix, $phpName, $failSilently);
+        } elseif (isset($this->joins[$tableName])) {
+            $tableMap = $this->joins[$tableName]->getTableMap();
         } elseif ($failSilently) {
             return array(null, null);
         } else {
@@ -2274,5 +2283,16 @@ class ModelCriteria extends Criteria
     public function exists($con = null)
     {
         return 0 !== $this->count($con);
+    }
+
+    /**
+     * Converts snake_case to PascalCase.
+     *
+     * @param string $strInput
+     * @return string
+     */
+    protected function databaseFormatToPascalCase(string $strInput): string
+    {
+        return str_replace(" ", "", ucwords(strtolower(implode(" ", explode("_", $strInput)))));
     }
 }
