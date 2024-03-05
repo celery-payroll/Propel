@@ -804,7 +804,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         }
         $script .= "
      *
-     * @param string \$format The date/time format string (either date()-style or strftime()-style).
+     * @param string|null \$format The date/time format string (either date()-style or strftime()-style).
      *				 If format is null, then the raw ".($useDateTime ? 'DateTime object' : 'unix timestamp integer')." will be returned.";
         if ($useDateTime) {
             $script .= "
