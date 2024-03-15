@@ -1192,6 +1192,8 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
     {
         $clo=strtolower($col->getName());
 
+        $nullType = (!$col->isNotNull()) ? "|null" : "";
+
         $script .= "
     /**
      * Get the [$clo] column value.
@@ -1201,7 +1203,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
      * @param PropelPDO \$con An optional PropelPDO connection to use for fetching this lazy-loaded column.";
         }
         $script .= "
-     * @return ".$col->getPhpType()."
+     * @return ".$col->getPhpType().$nullType."
      */";
     }
 
