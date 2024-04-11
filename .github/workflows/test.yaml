@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        php-version: ['8.1']
+        php-version: ['8.1', '8.2', '8.3']
 
       fail-fast: false
 
@@ -23,8 +23,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      -   uses: actions/checkout@v2
-
+      -   uses: actions/checkout@v4
 
       -   run: mysql --host 127.0.0.1 -u root -proot -e 'SET FOREIGN_KEY_CHECKS = 0; DROP DATABASE IF EXISTS test; DROP SCHEMA IF EXISTS second_hand_books; DROP SCHEMA IF EXISTS contest; DROP DATABASE IF EXISTS reverse_bookstore; DROP SCHEMA IF EXISTS bookstore_schemas; SET FOREIGN_KEY_CHECKS = 1;'
       -   run: mysql --host 127.0.0.1 -u root -proot -e 'CREATE DATABASE test; CREATE SCHEMA bookstore_schemas; CREATE SCHEMA contest; CREATE SCHEMA second_hand_books; CREATE DATABASE reverse_bookstore;'
@@ -34,7 +33,7 @@ jobs:
             php-version: ${{ matrix.php-version }}
             extensions: mbstring, iconv
 
-      -   uses: ramsey/composer-install@v2
+      -   uses: ramsey/composer-install@v3
 
       -   run: sudo echo "127.0.0.1 db" | sudo tee -a /etc/hosts
 

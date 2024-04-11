@@ -51,12 +51,15 @@ class ModelCriteria extends Criteria
     protected $previousJoin = null; // this is introduced to prevent useQuery->join from going wrong
     protected $isKeepQuery = true; // whether to clone the current object before termination methods
     protected $select = null;  // this is for the select method
+    protected bool $foundMatch;
+    public array $replacedColumns;
+    protected ?string $currentAlias;
 
     /**
      * Creates a new instance with the default capacity which corresponds to
      * the specified database.
      *
-     * @param string $dbName     The dabase name
+     * @param string $dbName     The database name
      * @param string $modelName  The phpName of a model, e.g. 'Book'
      * @param string $modelAlias The alias for the model in this query, e.g. 'b'
      */
