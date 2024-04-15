@@ -1,0 +1,8 @@
+parameters:
+    reportUnmatchedIgnoredErrors: false
+    parallel:
+        processTimeout: 900.0
+    level: 1
+    paths:
+        - generator
+        - runtime

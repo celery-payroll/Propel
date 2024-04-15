@@ -39,3 +39,16 @@ services:
 #      - PHP_IDE_CONFIG="serverName=propel"
 #      - XDEBUG_MODE=debug
 #      - XDEBUG_SESSION=1
+  shell-run:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /usr/src/app
+    volumes:
+      - ../:/usr/src/app
+    command: tail -f /dev/null
+    environment:
+      - PHP_EXTENSIONS=intl pdo_sqlite sqlite3
+      - STARTUP_COMMAND_1=composer install
+      - STARTUP_COMMAND_2=bash test/reset_tests.sh
+      - PHP_IDE_CONFIG="serverName=propel"

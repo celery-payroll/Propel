@@ -105,6 +105,7 @@
  * @since      2006-09-22
  * @package    propel.runtime.connection
  */
+#[AllowDynamicProperties]
 class DebugPDO extends PropelPDO
 {
     /**

@@ -24,6 +24,7 @@
  * @version    $Revision$
  * @package    propel.runtime.map
  */
+#[AllowDynamicProperties]
 class TableMap
 {
     /**

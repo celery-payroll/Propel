@@ -1215,6 +1215,7 @@ class CriteriaTest extends BookstoreTestBase
     }
 }
 
+#[AllowDynamicProperties]
 class CriteriaForClearTest extends Criteria
 {
     public function getNamedCriterions()

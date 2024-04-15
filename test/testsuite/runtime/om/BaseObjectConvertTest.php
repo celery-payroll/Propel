@@ -19,6 +19,8 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTes
  */
 class BaseObjectConvertTest extends BookstoreTestBase
 {
+    public $book;
+
     protected function setUp(): void
     {
         parent::setUp();

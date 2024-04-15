@@ -16,6 +16,7 @@
  * @version    $Revision$
  * @package    propel.runtime.formatter
  */
+#[AllowDynamicProperties]
 class PropelArrayFormatter extends PropelFormatter
 {
     protected $collectionName = 'PropelArrayCollection';

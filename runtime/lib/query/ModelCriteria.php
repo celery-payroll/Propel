@@ -25,6 +25,7 @@
  * @version    $Revision$
  * @package    propel.runtime.query
  */
+#[AllowDynamicProperties]
 class ModelCriteria extends Criteria
 {
     const MODEL_CLAUSE = "MODEL CLAUSE";
@@ -51,9 +52,6 @@ class ModelCriteria extends Criteria
     protected $previousJoin = null; // this is introduced to prevent useQuery->join from going wrong
     protected $isKeepQuery = true; // whether to clone the current object before termination methods
     protected $select = null;  // this is for the select method
-    protected bool $foundMatch;
-    public array $replacedColumns;
-    protected ?string $currentAlias;
 
     /**
      * Creates a new instance with the default capacity which corresponds to

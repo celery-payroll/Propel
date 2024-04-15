@@ -19,6 +19,8 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTes
  */
 class PropelCollectionConvertTest extends BookstoreTestBase
 {
+    public $coll;
+
     protected function setUp(): void
     {
         parent::setUp();

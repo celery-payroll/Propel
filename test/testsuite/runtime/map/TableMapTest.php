@@ -21,6 +21,7 @@ require_once dirname(__FILE__) . '/../../../../runtime/lib/exception/PropelExcep
  * @version    $Id$
  * @package    runtime.map
  */
+#[AllowDynamicProperties]
 class TableMapTest extends \PHPUnit\Framework\TestCase
 {
   protected $databaseMap;

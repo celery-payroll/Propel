@@ -23,6 +23,8 @@ class PropelSQLParser
     protected $len = 0;
     protected $pos = 0;
 
+    public $prevDelimiter;
+
     /**
      * Sets the inner SQL string for this object.
      * Also resets the parsing cursor (see getNextStatement)

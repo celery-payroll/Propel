@@ -20,6 +20,8 @@ require_once dirname(__FILE__) . '/../../../../tools/helpers/schemas/SchemasTest
  */
 class AggregateColumnBehaviorWithSchemaTest extends SchemasTestBase
 {
+    public $con;
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -31,6 +31,8 @@ class ConcreteInheritanceBehavior extends Behavior
         'schema'              => ''
     );
 
+    public $builder;
+
     public function modifyTable()
     {
         $table = $this->getTable();

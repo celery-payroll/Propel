@@ -48,7 +48,7 @@ class NestedSetBehaviorObjectBuilderModifierTest extends BookstoreNestedSetTestB
     {
         $expectedAttributes = array('nestedSetQueries');
         foreach ($expectedAttributes as $attribute) {
-            $this->assertClassHasAttribute($attribute, 'Table9');
+            $this->assertTrue(property_exists('Table9', $attribute));
         }
     }
 

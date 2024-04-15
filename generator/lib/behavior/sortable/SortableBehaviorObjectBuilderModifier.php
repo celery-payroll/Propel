@@ -19,6 +19,7 @@
 class SortableBehaviorObjectBuilderModifier
 {
     protected $behavior, $table, $builder, $objectClassname, $peerClassname;
+    public $queryClassname;
 
     public function __construct($behavior)
     {

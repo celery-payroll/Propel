@@ -50,6 +50,8 @@ class ForeignKey extends XMLElement
     const SETDEFAULT  = "SET DEFAULT";
     const SETNULL  = "SET NULL";
 
+    public $isParentChild;
+
     /**
      * Constructs a new ForeignKey object.
      *
