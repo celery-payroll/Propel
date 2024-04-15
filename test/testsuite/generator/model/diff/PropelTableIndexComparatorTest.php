@@ -20,6 +20,8 @@ require_once dirname(__FILE__) . '/../../../../../generator/lib/platform/MysqlPl
  */
 class PropelTableIndexComparatorTest extends \PHPUnit\Framework\TestCase
 {
+    public $platform;
+
     public function setUp(): void
     {
         $this->platform = new MysqlPlatform();

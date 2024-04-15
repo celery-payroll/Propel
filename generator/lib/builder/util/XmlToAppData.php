@@ -23,6 +23,7 @@ require_once dirname(__FILE__) . '/../../exception/SchemaException.php';
  * @version    $Revision$
  * @package    propel.generator.builder.util
  */
+#[AllowDynamicProperties]
 class XmlToAppData
 {
     /** enables debug output */

@@ -18,6 +18,9 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTes
  */
 class ObjectBehaviorTest extends BookstoreTestBase
 {
+    public $preDelete;
+    public $postDelete;
+
   public function testObjectAttributes()
   {
     $t = new Table3();

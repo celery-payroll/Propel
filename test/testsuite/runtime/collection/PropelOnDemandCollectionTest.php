@@ -19,6 +19,8 @@ require_once __DIR__ . '/../../../tools/helpers/bookstore/BookstoreEmptyTestBase
  */
 class PropelOnDemandCollectionTest extends BookstoreEmptyTestBase
 {
+    public $books;
+
     protected function setUp(): void
     {
         parent::setUp();

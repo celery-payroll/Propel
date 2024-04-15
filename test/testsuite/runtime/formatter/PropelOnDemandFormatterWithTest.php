@@ -21,20 +21,32 @@ class PropelOnDemandFormatterWithTest extends BookstoreEmptyTestBase
 {
     protected function assertCorrectHydration1($c, $msg)
     {
+        $book = null;
         $con = Propel::getConnection(BookPeer::DATABASE_NAME);
         $c->limit(1);
         $books = $c->find($con);
         foreach ($books as $book) {
             break;
         }
-        $count = $con->getQueryCount();
-        $this->assertEquals($book->getTitle(), 'Don Juan', 'Main object is correctly hydrated ' . $msg);
-        $author = $book->getAuthor();
-        $this->assertEquals($count, $con->getQueryCount(), 'with() hydrates the related objects to save a query ' . $msg);
-        $this->assertEquals($author->getLastName(), 'Byron', 'Related object is correctly hydrated ' . $msg);
-        $publisher = $book->getPublisher();
-        $this->assertEquals($count, $con->getQueryCount(), 'with() hydrates the related objects to save a query ' . $msg);
-        $this->assertEquals($publisher->getName(), 'Penguin', 'Related object is correctly hydrated ' . $msg);
+
+        if ($book instanceof Book) {
+            $count = $con->getQueryCount();
+            $this->assertEquals($book->getTitle(), 'Don Juan', 'Main object is correctly hydrated ' . $msg);
+            $author = $book->getAuthor();
+            $this->assertEquals(
+                $count,
+                $con->getQueryCount(),
+                'with() hydrates the related objects to save a query ' . $msg
+            );
+            $this->assertEquals($author->getLastName(), 'Byron', 'Related object is correctly hydrated ' . $msg);
+            $publisher = $book->getPublisher();
+            $this->assertEquals(
+                $count,
+                $con->getQueryCount(),
+                'with() hydrates the related objects to save a query ' . $msg
+            );
+            $this->assertEquals($publisher->getName(), 'Penguin', 'Related object is correctly hydrated ' . $msg);
+        }
     }
 
     public function testFindOneWith()

@@ -23,7 +23,8 @@
     "phpcompatibility/php-compatibility": "^9.3",
     "squizlabs/php_codesniffer": "^3.5",
     "ext-simplexml": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "phpstan/phpstan": "^1.10"
   },
   "extra": {
     "branch-alias": {

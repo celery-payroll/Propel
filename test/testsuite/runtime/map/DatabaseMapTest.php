@@ -17,6 +17,7 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTes
  * @version    $Id$
  * @package    runtime.map
  */
+#[AllowDynamicProperties]
 class DatabaseMapTest extends BookstoreTestBase
 {
   protected $databaseMap;

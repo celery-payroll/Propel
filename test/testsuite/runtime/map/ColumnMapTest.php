@@ -20,6 +20,10 @@ require_once dirname(__FILE__) . '/../../../tools/helpers/bookstore/BookstoreTes
 class ColumnMapTest extends BookstoreTestBase
 {
     protected $databaseMap;
+    public $dmap;
+    public $tmap;
+    public $columnName;
+    public $cmap;
 
     protected function setUp(): void
     {
