@@ -14,7 +14,7 @@
   },
   "include-path": ["runtime/lib", "generator/lib"],
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.1",
     "phing/phing": "~2.4",
     "ext-pdo": "*"
   },
