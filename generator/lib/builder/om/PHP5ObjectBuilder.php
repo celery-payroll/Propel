@@ -935,7 +935,8 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         }
 
         try {
-            \$dt = new $dateTimeClass(\$this->$clo);
+            \$dt = new $dateTimeClass(\$this->$clo, new DateTimeZone('America/Curacao'));
+            \$dt->setTimeZone(new DateTimeZone(date_default_timezone_get()));
         } catch (Exception \$x) {
             throw new PropelException(\"Internally stored date/time/timestamp value could not be converted to $dateTimeClass: \" . var_export(\$this->$clo, true), \$x);
         }
@@ -1606,7 +1607,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         $fmt = var_export($this->getTemporalFormatter($col), true);
 
         $script .= "
-        \$dt = PropelDateTime::newInstance(\$v, null, '$dateTimeClass');
+        \$dt = PropelDateTime::newInstance(\$v, new DateTimeZone('America/Curacao'), '$dateTimeClass');
         if (\$this->$clo !== null || \$dt !== null) {
             \$currentDateAsString = (\$this->$clo !== null && \$tmpDt = new $dateTimeClass(\$this->$clo)) ? \$tmpDt->format($fmt) : null;
             \$newDateAsString = \$dt ? \$dt->format($fmt) : null;";

@@ -279,7 +279,7 @@ abstract class DBAdapter
     public function formatTemporalValue($value, $type)
     {
         /** @var $dt PropelDateTime */
-        if ($dt = PropelDateTime::newInstance($value)) {
+        if ($dt = PropelDateTime::newInstance($value, new DateTimeZone('America/Curacao'))) {
             if ($type instanceof ColumnMap) {
                 $type = $type->getType();
             }

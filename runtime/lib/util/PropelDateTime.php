@@ -49,7 +49,8 @@ class PropelDateTime extends DateTime
     public static function newInstance($value, DateTimeZone $timeZone = null, $dateTimeClass = 'DateTime')
     {
         if ($value instanceof DateTime) {
-            return $value;
+            $objDateTime = clone $value;
+            return $objDateTime->setTimezone(new \DateTimeZone("America/Curacao"));
         }
         if ($value === null || $value === '') {
             // '' is seen as NULL for temporal objects
@@ -58,10 +59,10 @@ class PropelDateTime extends DateTime
         }
         try {
             if (self::isTimestamp($value)) { // if it's a unix timestamp
-                $dateTimeObject = new $dateTimeClass('@' . $value, new DateTimeZone('UTC'));
+                $dateTimeObject = new $dateTimeClass('@' . $value, new DateTimeZone('America/Curacao'));
                 // timezone must be explicitly specified and then changed
                 // because of a DateTime bug: http://bugs.php.net/bug.php?id=43003
-                $dateTimeObject->setTimeZone(new DateTimeZone(date_default_timezone_get()));
+                $dateTimeObject->setTimeZone(new DateTimeZone('America/Curacao'));
             } else {
                 if ($timeZone === null) {
                     // stupid DateTime constructor signature
