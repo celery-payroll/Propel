@@ -20,7 +20,6 @@ require_once dirname(__FILE__) . '/../../../../runtime/lib/exception/PropelExcep
  */
 class PropelDateTimeTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * Assert that two dates are identical (equal and have same time zone).
      */
@@ -176,9 +175,10 @@ class PropelDateTimeTest extends \PHPUnit\Framework\TestCase
         return array(
             'Y-m-d'		       => array('2011-08-10', '2011-08-10 00:00:00'),
             // 1312960848 : Wed, 10 Aug 2011 07:20:48 GMT
-            'unix_timestamp'  => array('1312960848', '2011-08-10 07:20:48'),
+            // Wed Aug 10 2011 03:20:48 GMT-0400 (Atlantic Standard Time)
+            'unix_timestamp'  => array('1312960848', '2011-08-10 03:20:48'),
             'Y-m-d H:is'      => array('2011-08-10 10:22:15', '2011-08-10 10:22:15'),
-            'datetime_object' => array(new DateTime('2011-08-10 10:23:10'), '2011-08-10 10:23:10')
+            'datetime_object' => array(new DateTime('2011-08-10 10:23:10'), '2011-08-10 06:23:10')
         );
     }
 
@@ -190,7 +190,8 @@ class PropelDateTimeTest extends \PHPUnit\Framework\TestCase
             'unix_timestamp'	=> array('1312960848', '2011-08-10 09:20:48'),
             // "1323517115" : Sat, 10 Dec 2011 11:38:35 GMT
             // "2011-12-10 12:38:35" : GMT +1
-            'unix_timestamp'	=> array('1323517115', '2011-12-10 12:38:35'),
+            // Sat Dec 10 2011 07:38:35 GMT-0400 (Atlantic Standard Time)
+            'unix_timestamp'	=> array('1323517115', '2011-12-10 07:38:35'),
         );
     }
 }

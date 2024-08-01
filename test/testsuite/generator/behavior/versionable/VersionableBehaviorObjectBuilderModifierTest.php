@@ -626,6 +626,9 @@ XML;
 
     public function testVersionCreatedAt()
     {
+        $originalTimezone = date_default_timezone_get();
+        date_default_timezone_set('America/Curacao');
+
         $o = new VersionableBehaviorTest4();
         $t = time();
         $o->save();
@@ -643,6 +646,8 @@ XML;
             ->filterByVersionableBehaviorTest4($o)
             ->findOne();
         $this->assertEquals($o->getVersionCreatedAt(), $version->getVersionCreatedAt());
+
+        date_default_timezone_set($originalTimezone);
     }
 
     public function testVersionCreatedBy()

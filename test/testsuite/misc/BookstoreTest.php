@@ -43,6 +43,9 @@ class BookstoreTest extends BookstoreEmptyTestBase
 
     public function testScenario()
     {
+        $originalTimezone = date_default_timezone_get();
+        date_default_timezone_set('America/Curacao');
+
         // Add publisher records
         // ---------------------
 
@@ -464,10 +467,14 @@ class BookstoreTest extends BookstoreEmptyTestBase
         $this->assertEquals(array(), BookClubListPeer::doSelect(new Criteria()), 'no records in [book_club_list] table');
         $this->assertEquals(array(), BookListRelPeer::doSelect(new Criteria()), 'no records in [book_x_list] table');
 
+        date_default_timezone_set($originalTimezone);
     }
 
     public function testScenarioUsingQuery()
     {
+        $originalTimezone = date_default_timezone_get();
+        date_default_timezone_set('America/Curacao');
+
         // Add publisher records
         // ---------------------
 
@@ -916,5 +923,7 @@ class BookstoreTest extends BookstoreEmptyTestBase
         $this->assertEquals(array(), BookClubListPeer::doSelect(new Criteria()), 'no records in [book_club_list] table');
         $this->assertEquals(array(), BookListRelPeer::doSelect(new Criteria()), 'no records in [book_x_list] table');
         $this->assertEquals(array(), BookListFavoritePeer::doSelect(new Criteria()), 'no records in [book_club_list_favorite_books] table');
+
+        date_default_timezone_set($originalTimezone);
     }
 }

@@ -59,6 +59,9 @@ EOF;
 
     public function testPreEpochValue()
     {
+        $originalTimezone = date_default_timezone_get();
+        date_default_timezone_set('America/Curacao');
+
         $r = new ComplexColumnTypeEntity5();
         $r->setBar1(new DateTime('1602-02-02'));
         $this->assertEquals('1602-02-02', $r->getBar1(null)->format('Y-m-d'));
@@ -66,6 +69,8 @@ EOF;
         $r->setBar1('1702-02-02');
         $this->assertTrue($r->isModified());
         $this->assertEquals('1702-02-02', $r->getBar1(null)->format('Y-m-d'));
+
+        date_default_timezone_set($originalTimezone);
     }
 
     /**
@@ -80,6 +85,9 @@ EOF;
 
     public function testUnixTimestampValue()
     {
+        $originalTimezone = date_default_timezone_get();
+        date_default_timezone_set('America/Curacao');
+
         $r = new ComplexColumnTypeEntity5();
         $r->setBar1(time());
         $this->assertEquals(date('Y-m-d'), $r->getBar1('Y-m-d'));
@@ -91,32 +99,44 @@ EOF;
         $r = new ComplexColumnTypeEntity5();
         $r->setBar3(time());
         $this->assertEquals(date('Y-m-d H:i'), $r->getBar3('Y-m-d H:i'));
+
+        date_default_timezone_set($originalTimezone);
     }
 
     public function testDatePersistence()
     {
+        $originalTimezone = date_default_timezone_get();
+        date_default_timezone_set('America/Curacao');
+
         $r = new ComplexColumnTypeEntity5();
         $r->setBar1(new DateTime('1999-12-20'));
         $r->save();
         ComplexColumnTypeEntity5Peer::clearInstancePool();
         $r1 = ComplexColumnTypeEntity5Query::create()->findPk($r->getId());
         $this->assertEquals('1999-12-20', $r1->getBar1(null)->format('Y-m-d'));
+
+        date_default_timezone_set($originalTimezone);
     }
 
     public function testTimePersistence()
     {
+        $originalTimezone = date_default_timezone_get();
+        date_default_timezone_set('America/Curacao');
+
         $r = new ComplexColumnTypeEntity5();
         $r->setBar2(strtotime('12:55'));
         $r->save();
         ComplexColumnTypeEntity5Peer::clearInstancePool();
         $r1 = ComplexColumnTypeEntity5Query::create()->findPk($r->getId());
         $this->assertEquals('12:55', $r1->getBar2(null)->format('H:i'));
+
+        date_default_timezone_set($originalTimezone);
     }
 
     public function testTimestampPersistence()
     {
         $r = new ComplexColumnTypeEntity5();
-        $r->setBar3(new DateTime('1999-12-20 12:55'));
+        $r->setBar3(new DateTime('1999-12-20 12:55', New DateTimeZone('America/Curacao')));
         $r->save();
         ComplexColumnTypeEntity5Peer::clearInstancePool();
         $r1 = ComplexColumnTypeEntity5Query::create()->findPk($r->getId());
