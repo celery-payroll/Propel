@@ -1638,7 +1638,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
      * @param Column $col The current column.
      * @see        parent::addColumnMutators()
      */
-    protected function addTemporalMutatorDate(&$script, Column $col)
+    protected function addDateMutator(&$script, Column $col)
     {
         $cfc = $col->getPhpName();
         $clo = strtolower($col->getName());

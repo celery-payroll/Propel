@@ -90,7 +90,7 @@ abstract class ObjectBuilder extends OMBuilder
             if ($col->isLobType()) {
                 $this->addLobMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::DATE) {
-                $this->addTemporalMutatorDate($script, $col);
+                $this->addDateMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
                 $this->addTemporalMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::OBJECT) {
