@@ -89,7 +89,9 @@ abstract class ObjectBuilder extends OMBuilder
         foreach ($this->getTable()->getColumns() as $col) {
             if ($col->isLobType()) {
                 $this->addLobMutator($script, $col);
-            } elseif ($col->getType() === PropelTypes::DATE || $col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
+            } elseif ($col->getType() === PropelTypes::DATE) {
+                $this->addTemporalMutatorDate($script, $col);
+            } elseif ($col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
                 $this->addTemporalMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::OBJECT) {
                 $this->addObjectMutator($script, $col);
