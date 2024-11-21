@@ -5432,8 +5432,13 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
 
         foreach ($table->getColumns() as $col) {
             if (!in_array($col, $autoIncCols, true)) {
-                $script .= "
-        \$copyObj->set".$col->getPhpName()."(\$this->get".$col->getPhpName()."());";
+                if ($col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
+                    $script .= "
+        \$copyObj->set" . $col->getPhpName() . "(\$this->get" . $col->getPhpName() . "(null));";
+                } else {
+                    $script .= "
+        \$copyObj->set" . $col->getPhpName() . "(\$this->get" . $col->getPhpName() . "());";
+                }
             }
         } // foreach
 
