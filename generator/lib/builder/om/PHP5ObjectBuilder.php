@@ -1046,7 +1046,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         if (\$format === null) {";
         if ($useDateTime) {
             $script .= "
-            // Because propel.useLocalDateClass is true, we return a $dateTimeClass object.
+            // Because propel.useDateTimeClass is true, we return a $dateTimeClass object.
             return \$dt;
         }
         ";
