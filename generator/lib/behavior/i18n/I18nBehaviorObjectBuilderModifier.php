@@ -177,11 +177,10 @@ class I18nBehaviorObjectBuilderModifier
         $functionStatement = '';
         if ($column->getType() === PropelTypes::DATE || $column->getType() === PropelTypes::TIME || $column->getType() === PropelTypes::TIMESTAMP) {
             $objectBuilder->addTemporalMutatorComment($comment, $column);
-            $objectBuilder->addMutatorOpenOpen($functionStatement, $column);
         } else {
             $objectBuilder->addMutatorComment($comment, $column);
-            $objectBuilder->addMutatorOpenOpen($functionStatement, $column);
         }
+        $objectBuilder->addMutatorOpenOpen($functionStatement, $column);
         $comment = preg_replace('/^\t/m', '', $comment);
         $comment = str_replace('@return     ' . $i18nTablePhpName, '@return     ' . $tablePhpName, $comment);
         $functionStatement = preg_replace('/^\t/m', '', $functionStatement);

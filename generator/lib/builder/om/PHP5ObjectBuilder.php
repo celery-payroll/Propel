@@ -143,7 +143,7 @@ class PHP5ObjectBuilder extends ObjectBuilder
             $fmt = $this->getTemporalFormatter($col);
             try {
                 if (!($this->getPlatform() instanceof MysqlPlatform &&
-                ($val === '0000-00-00 00:00:00' || $val === '0000-00-00'))) {
+                    ($val === '0000-00-00 00:00:00' || $val === '0000-00-00'))) {
                     // while technically this is not a default value of null,
                     // this seems to be closest in meaning.
                     $defDt = new DateTime($val);
@@ -401,8 +401,8 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
 
         // many-to-many relationships
         foreach ($table->getCrossFks() as $fkList) {
-                $crossFK = $fkList[1];
-                $this->addCrossFKAttributes($script, $crossFK);
+            $crossFK = $fkList[1];
+            $this->addCrossFKAttributes($script, $crossFK);
         }
 
         $this->addAlreadyInSaveAttribute($script);
@@ -751,19 +751,32 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
     // --------------------------------------------------------------
 
     /**
-     * Adds a date/time/timestamp getter method.
+     * Adds a date/time or timestamp getter method.
      * @param string &$script The script will be modified in this method.
      * @param Column $col The current column.
      * @see        parent::addColumnAccessors()
      */
-    protected function addTemporalAccessor(&$script, Column $col)
+    protected function addTemporalDateTimeAccessor(&$script, Column $col)
     {
         $this->addTemporalAccessorComment($script, $col);
         $this->addTemporalAccessorOpen($script, $col);
-        $this->addTemporalAccessorBody($script, $col);
+        $this->addTemporalDateTimeAccessorBody($script, $col);
         $this->addTemporalAccessorClose($script, $col);
-    } // addTemporalAccessor
+    } // addTemporalDateTimeAccessor
 
+    /**
+     * Adds a date getter method.
+     * @param string &$script The script will be modified in this method.
+     * @param Column $col The current column.
+     * @see        parent::addColumnAccessors()
+     */
+    protected function addTemporalDateAccessor(&$script, Column $col)
+    {
+        $this->addTemporalAccessorComment($script, $col);
+        $this->addTemporalAccessorOpen($script, $col);
+        $this->addTemporalDateAccessorBody($script, $col);
+        $this->addTemporalAccessorClose($script, $col);
+    } // addTemporalDateAccessor
 
     /**
      * Adds the comment for a temporal accessor
@@ -774,6 +787,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
     public function addTemporalAccessorComment(&$script, Column $col)
     {
         $clo = strtolower($col->getName());
+
         $useDateTime = $this->getBuildProperty('useDateTimeClass');
 
         $dateTimeClass = $this->getBuildProperty('dateTimeClass');
@@ -800,7 +814,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         if (!$useDateTime) {
             $script .= "
      * This accessor only only work with unix epoch dates.  Consider enabling the propel.useDateTimeClass
-     * option in order to avoid converstions to integers (which are limited in the dates they can express).";
+     * option in order to avoid conversions to integers (which are limited in the dates they can express).";
         }
         $script .= "
      *
@@ -878,9 +892,8 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
      * @param Column $col The current column.
      * @see        addTemporalAccessor
      **/
-    protected function addTemporalAccessorBody(&$script, Column $col)
+    protected function addTemporalDateTimeAccessorBody(&$script, Column $col)
     {
-        $cfc = $col->getPhpName();
         $clo = strtolower($col->getName());
 
         $useDateTime = $this->getBuildProperty('useDateTimeClass');
@@ -890,31 +903,11 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
             $dateTimeClass = 'DateTime';
         }
         $this->declareClasses($dateTimeClass);
-        $defaultfmt = null;
-
-        // Default date/time formatter strings are specified in build.properties
-        if ($col->getType() === PropelTypes::DATE) {
-            $defaultfmt = $this->getBuildProperty('defaultDateFormat');
-        } elseif ($col->getType() === PropelTypes::TIME) {
-            $defaultfmt = $this->getBuildProperty('defaultTimeFormat');
-        } elseif ($col->getType() === PropelTypes::TIMESTAMP) {
-            $defaultfmt = $this->getBuildProperty('defaultTimeStampFormat');
-        }
-
-        if (empty($defaultfmt)) {
-            $defaultfmt = null;
-        }
 
         $handleMysqlDate = false;
-        if ($this->getPlatform() instanceof MysqlPlatform) {
-            if ($col->getType() === PropelTypes::TIMESTAMP) {
-                $handleMysqlDate = true;
-                $mysqlInvalidDateString = '0000-00-00 00:00:00';
-            } elseif ($col->getType() === PropelTypes::DATE) {
-                $handleMysqlDate = true;
-                $mysqlInvalidDateString = '0000-00-00';
-            }
-            // 00:00:00 is a valid time, so no need to check for that.
+        if ($this->getPlatform() instanceof MysqlPlatform && $col->getType() === PropelTypes::TIMESTAMP) {
+            $handleMysqlDate = true;
+            $mysqlInvalidDateString = '0000-00-00 00:00:00';
         }
 
         if ($col->isLazyLoad()) {
@@ -957,6 +950,103 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         if ($useDateTime) {
             $script .= "
             // Because propel.useDateTimeClass is true, we return a $dateTimeClass object.
+            return \$dt;
+        }
+        ";
+        } else {
+            $script .= "
+            // We cast here to maintain BC in API; obviously we will lose data if we're dealing with pre-/post-epoch dates.
+            return (int) \$dt->format('U');
+        }
+        ";
+        }
+
+        $script .= "
+        if (\$format === 'carbon') {
+            try {
+                return new \Carbon\Carbon(\$dt);
+            } catch (Exception \$x) {
+                throw new PropelException(\"Internally stored date/time/timestamp value could not be converted to Carbon\");
+            }
+        }
+        ";
+
+        $script .= "
+        if (\$this->isIsoFormat(\$format)) {
+            throw new PropelException(\"An iso format is used. This should be a date format\");
+        }
+        
+        if (strpos(\$format, '%') !== false) {
+            throw new PropelException(\"A strftime format is used. This should be a date format\");
+        }
+
+        return \$dt->format(\$format);
+        ";
+    }
+
+    /**
+     * Adds the body of the temporal accessor
+     * @param string &$script The script will be modified in this method.
+     * @param Column $col The current column.
+     * @see        addTemporalAccessor
+     **/
+    protected function addTemporalDateAccessorBody(&$script, Column $col)
+    {
+        $clo = strtolower($col->getName());
+
+        $useDateTime = $this->getBuildProperty('useDateTimeClass');
+
+        $dateTimeClass = $this->getBuildProperty('dateTimeClass');
+        if (!$dateTimeClass) {
+            $dateTimeClass = 'DateTime';
+        }
+        $this->declareClasses($dateTimeClass);
+
+        $handleMysqlDate = false;
+        if ($this->getPlatform() instanceof MysqlPlatform && $col->getType() === PropelTypes::DATE) {
+            $handleMysqlDate = true;
+            $mysqlInvalidDateString = '0000-00-00';
+        }
+
+        if ($col->isLazyLoad()) {
+            $script .= $this->getAccessorLazyLoadSnippet($col);
+        }
+
+        $script .= "
+        if (\$this->$clo === null) {
+            return null;
+        }
+";
+        if ($handleMysqlDate) {
+            $script .= "
+        if (\$this->$clo === '$mysqlInvalidDateString') {
+            // while technically this is not a default value of null,
+            // this seems to be closest in meaning.
+            return null;
+        }
+
+        try {
+            \$dt = new $dateTimeClass(\$this->$clo);
+        } catch (Exception \$x) {
+            throw new PropelException(\"Internally stored date/time/timestamp value could not be converted to $dateTimeClass: \" . var_export(\$this->$clo, true), \$x);
+        }
+";
+        } else {
+            $script .= "
+
+        try {
+            \$dt = new $dateTimeClass(\$this->$clo);
+        } catch (Exception \$x) {
+            throw new PropelException(\"Internally stored date/time/timestamp value could not be converted to $dateTimeClass: \" . var_export(\$this->$clo, true), \$x);
+        }
+";
+        } // if handleMysqlDate
+
+        $script .= "
+        if (\$format === null) {";
+        if ($useDateTime) {
+            $script .= "
+            // Because propel.useLocalDateClass is true, we return a $dateTimeClass object.
             return \$dt;
         }
         ";
@@ -1588,7 +1678,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
      * @param Column $col The current column.
      * @see        parent::addColumnMutators()
      */
-    protected function addTemporalMutator(&$script, Column $col)
+    protected function addTemporalDateTimeMutator(&$script, Column $col)
     {
         $cfc = $col->getPhpName();
         $clo = strtolower($col->getName());
@@ -1638,7 +1728,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
      * @param Column $col The current column.
      * @see        parent::addColumnMutators()
      */
-    protected function addDateMutator(&$script, Column $col)
+    protected function addTemporalDateMutator(&$script, Column $col)
     {
         $cfc = $col->getPhpName();
         $clo = strtolower($col->getName());
@@ -1657,10 +1747,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         $fmt = var_export($this->getTemporalFormatter($col), true);
 
         $script .= "
-        if (\$v instanceof \\DateTimeInterface) {
-            \$v = \$v->format('Y-m-d');
-        }
-        \$dt = PropelDateTime::newInstance(\$v, new DateTimeZone('America/Curacao'), '$dateTimeClass');
+        \$dt = PropelDateTime::newInstance(\$v, null, '$dateTimeClass');
         if (\$this->$clo !== null || \$dt !== null) {
             \$currentDateAsString = (\$this->$clo !== null && \$tmpDt = new $dateTimeClass(\$this->$clo)) ? \$tmpDt->format($fmt) : null;
             \$newDateAsString = \$dt ? \$dt->format($fmt) : null;";
@@ -1877,7 +1964,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         $this->addMutatorOpenOpen($script, $col);
         $this->addMutatorOpenBody($script, $col);
 
-            $script .= "
+        $script .= "
         if (\$v !== null) {
             if (is_string(\$v)) {
                 \$v = in_array(strtolower(\$v), array('false', 'off', '-', 'no', 'n', '0', '')) ? false : true;
@@ -3330,7 +3417,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
 
         ksort($localColumns); // restoring the order of the foreign PK
         $localColumns = count($localColumns) > 1 ?
-                ('array('.implode(', ', $localColumns).')') : reset($localColumns);
+            ('array('.implode(', ', $localColumns).')') : reset($localColumns);
 
         $script .= "
 
@@ -3473,7 +3560,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
             $relCol2 = $this->getFKPhpNameAffix($fk2, $plural = false);
 
             if ( $this->getRelatedBySuffix($refFK) != "" &&
-            ($this->getRelatedBySuffix($refFK) == $this->getRelatedBySuffix($fk2))) {
+                ($this->getRelatedBySuffix($refFK) == $this->getRelatedBySuffix($fk2))) {
                 $doJoinGet = false;
             }
 
@@ -3980,15 +4067,15 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
                 \$this->{$inputCollection}->clear();
             }";
 
-            if (!$refFK->isComposite() && !$localColumn->isNotNull()) {
+        if (!$refFK->isComposite() && !$localColumn->isNotNull()) {
             $script .= "
             \$this->{$inputCollection}[]= \${$lowerRelatedObjectClassName};";
-            } else {
+        } else {
             $script .= "
             \$this->{$inputCollection}[]= clone \${$lowerRelatedObjectClassName};";
-            }
+        }
 
-            $script .= "
+        $script .= "
             \${$lowerRelatedObjectClassName}->set{$relCol}(null);
         }
 
@@ -4721,7 +4808,7 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         } else {
             $script .= $this->addDoInsertBodyRaw();
         }
-            $script .= "
+        $script .= "
         \$this->setNew(false);
     }
 ";
@@ -5086,8 +5173,8 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
             $script .= "
                 }
                 \$this->postSave(\$con);";
-                $this->applyBehaviorModifier('postSave', $script, "				");
-                $script .= "
+            $this->applyBehaviorModifier('postSave', $script, "				");
+            $script .= "
                 ".$this->getPeerClassname()."::addInstanceToPool(\$this);
             } else {
                 \$affectedRows = 0;
@@ -5507,9 +5594,9 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         // Note: we're no longer resetting non-autoincrement primary keys to default values
         // due to: http://propel.phpdb.org/trac/ticket/618
         foreach ($autoIncCols as $col) {
-                $coldefval = $col->getPhpDefaultValue();
-                $coldefval = var_export($coldefval, true);
-                $script .= "
+            $coldefval = $col->getPhpDefaultValue();
+            $coldefval = var_export($coldefval, true);
+            $script .= "
             \$copyObj->set".$col->getPhpName() ."($coldefval); // this is a auto-increment column, so set to default value";
         } // foreach
         $script .= "

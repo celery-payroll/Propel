@@ -57,8 +57,10 @@ abstract class ObjectBuilder extends OMBuilder
         foreach ($table->getColumns() as $col) {
 
             // if they're not using the DateTime class than we will generate "compatibility" accessor method
-            if ($col->getType() === PropelTypes::DATE || $col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
-                $this->addTemporalAccessor($script, $col);
+            if ($col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
+                $this->addTemporalDateTimeAccessor($script, $col);
+            } elseif ($col->getType() === PropelTypes::DATE) {
+                $this->addTemporalDateAccessor($script, $col);
             } elseif ($col->getType() === PropelTypes::OBJECT) {
                 $this->addObjectAccessor($script, $col);
             } elseif ($col->getType() === PropelTypes::PHP_ARRAY) {
@@ -90,9 +92,9 @@ abstract class ObjectBuilder extends OMBuilder
             if ($col->isLobType()) {
                 $this->addLobMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::DATE) {
-                $this->addDateMutator($script, $col);
+                $this->addTemporalDateMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::TIME || $col->getType() === PropelTypes::TIMESTAMP) {
-                $this->addTemporalMutator($script, $col);
+                $this->addTemporalDateTimeMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::OBJECT) {
                 $this->addObjectMutator($script, $col);
             } elseif ($col->getType() === PropelTypes::PHP_ARRAY) {
@@ -191,7 +193,7 @@ abstract class ObjectBuilder extends OMBuilder
      */
     public function hasBehaviorModifier($hookName, $modifier = null)
     {
-         return parent::hasBehaviorModifier($hookName, 'ObjectBuilderModifier');
+        return parent::hasBehaviorModifier($hookName, 'ObjectBuilderModifier');
     }
 
     /**
