@@ -1747,6 +1747,9 @@ abstract class ".$this->getClassname()." extends ".$parentClass." ";
         $fmt = var_export($this->getTemporalFormatter($col), true);
 
         $script .= "
+        if (\$v instanceof \\DateTimeInterface) {
+            \$v = \$v->format('Y-m-d');
+        }
         \$dt = PropelDateTime::newInstance(\$v, null, '$dateTimeClass');
         if (\$this->$clo !== null || \$dt !== null) {
             \$currentDateAsString = (\$this->$clo !== null && \$tmpDt = new $dateTimeClass(\$this->$clo)) ? \$tmpDt->format($fmt) : null;
